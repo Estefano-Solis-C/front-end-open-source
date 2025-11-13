@@ -1,0 +1,33 @@
+<div class="my-vehicles-header">
+  <h1 class="page-header">{{ 'MY_VEHICLES.TITLE' | translate }}</h1>
+</div>
+
+<div class="actions">
+  <a routerLink="/publish-vehicle" class="action-button primary">
+    + {{ 'MY_VEHICLES.PUBLISH_NEW' | translate }}
+  </a>
+</div>
+
+<div *ngIf="vehicles.length === 0" class="no-vehicles">
+  <p>{{ 'MY_VEHICLES.EMPTY_LINE1' | translate }}</p>
+  <p>{{ 'MY_VEHICLES.EMPTY_LINE2' | translate }}</p>
+</div>
+
+<div class="vehicles-grid" *ngIf="vehicles.length > 0">
+  <div class="vehicle-card" *ngFor="let vehicle of vehicles">
+    <div class="card-image-wrapper">
+      <img [src]="vehicle.imageUrl" class="vehicle-image" alt="{{ vehicle.brand }}">
+      <div class="status-badge" [ngClass]="vehicle.status">
+        {{ vehicle.status === 'available' ? ('VEHICLE.STATUS_AVAILABLE' | translate) : ('VEHICLE.STATUS_RENTED' | translate) }}
+      </div>
+    </div>
+    <div class="card-content">
+      <h3>{{ vehicle.brand }} {{ vehicle.model }} ({{ vehicle.year }})</h3>
+      <p class="price">S/ {{ vehicle.pricePerDay }} <span>{{ 'VEHICLE.PER_DAY' | translate }}</span></p>
+    </div>
+    <div class="card-actions">
+      <a [routerLink]="['/tracking', vehicle.id]" class="action-button monitor">{{ 'MY_VEHICLES.MONITOR' | translate }}</a>
+      <a href="#" class="action-button edit">{{ 'MY_VEHICLES.EDIT' | translate }}</a>
+    </div>
+  </div>
+</div>

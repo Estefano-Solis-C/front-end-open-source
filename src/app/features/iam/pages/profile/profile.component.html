@@ -1,0 +1,77 @@
+<div class="profile-page-container" *ngIf="currentUser$ | async as user">
+  <div class="profile-header-section">
+    <h1>{{ 'PROFILE.TITLE' | translate }}</h1>
+    <button class="edit-profile-btn" (click)="enterEditMode()" *ngIf="!isEditMode">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+      <span>{{ 'PROFILE.EDIT_INFO' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <h2>{{ 'PROFILE.PERSONAL_INFO' | translate }}</h2>
+      <form *ngIf="isEditMode; else viewMode" [formGroup]="infoForm" (ngSubmit)="onUpdateInformation()">
+        <div class="form-group">
+          <label for="name">{{ 'PROFILE.FULL_NAME' | translate }}</label>
+          <input type="text" id="name" formControlName="name">
+        </div>
+        <div class="form-group">
+          <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
+          <input type="email" id="email" formControlName="email">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="action-button cancel-button" (click)="cancelEditMode()">{{ 'COMMON.CANCEL' | translate }}</button>
+          <button type="submit" class="action-button save-button" [disabled]="infoForm.invalid || infoForm.pristine">{{ 'COMMON.SAVE_CHANGES' | translate }}</button>
+        </div>
+      </form>
+      <ng-template #viewMode>
+        <div class="info-view">
+          <div class="info-item">
+            <label>{{ 'PROFILE.FULL_NAME' | translate }}</label>
+            <p>{{ user.name }}</p>
+          </div>
+          <div class="info-item">
+            <label>{{ 'LOGIN.EMAIL' | translate }}</label>
+            <p>{{ user.email }}</p>
+          </div>
+          <div class="info-item">
+            <label>{{ 'PROFILE.ROLE' | translate }}</label>
+            <p>{{ ('ROLES.' + getReadableRoleKey(user.role)) | translate }}</p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="profile-card">
+      <h2>{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</h2>
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+        <div class="form-group">
+          <label for="currentPassword">{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</label>
+          <input type="password" id="currentPassword" formControlName="currentPassword">
+        </div>
+        <div class="form-group">
+          <label for="newPassword">{{ 'PROFILE.NEW_PASSWORD' | translate }}</label>
+          <input type="password" id="newPassword" formControlName="newPassword">
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">{{ 'PROFILE.CONFIRM_NEW_PASSWORD' | translate }}</label>
+          <input type="password" id="confirmPassword" formControlName="confirmPassword">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="action-button save-button" [disabled]="passwordForm.invalid">{{ 'PROFILE.UPDATE_PASSWORD' | translate }}</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="profile-card danger-zone">
+      <h2>{{ 'PROFILE.DANGER_ZONE' | translate }}</h2>
+      <div class="danger-option">
+        <div class="danger-info">
+          <h4>{{ 'PROFILE.DELETE_ACCOUNT' | translate }}</h4>
+          <p>{{ 'PROFILE.DELETE_ACCOUNT_WARNING' | translate }}</p>
+        </div>
+        <button class="action-button delete-button" (click)="deleteAccount()">{{ 'PROFILE.DELETE_ACCOUNT' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>

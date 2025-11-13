@@ -1,0 +1,28 @@
+<h1 class="page-header">{{ isEditMode ? ('VEHICLE_FORM.TITLE_EDIT' | translate) : ('VEHICLE_FORM.TITLE_CREATE' | translate) }}</h1>
+<div class="form-container">
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="brand">{{ 'VEHICLE_FORM.BRAND' | translate }}</label>
+      <input type="text" id="brand" formControlName="brand">
+    </div>
+    <div class="form-group">
+      <label for="model">{{ 'VEHICLE_FORM.MODEL' | translate }}</label>
+      <input type="text" id="model" formControlName="model">
+    </div>
+    <div class="form-group">
+      <label for="year">{{ 'VEHICLE_DETAIL.YEAR' | translate }}</label>
+      <input type="number" id="year" formControlName="year">
+    </div>
+    <div class="form-group">
+      <label for="pricePerDay">{{ 'BOOKING_PROCESS.PRICE_PER_DAY' | translate }} (S/)</label>
+      <input type="number" id="pricePerDay" formControlName="pricePerDay">
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">{{ 'VEHICLE_FORM.IMAGE_URL' | translate }}</label>
+      <input type="text" id="imageUrl" formControlName="imageUrl">
+    </div>
+    <button type="submit" class="submit-button" [disabled]="vehicleForm.invalid">
+      {{ isEditMode ? ('COMMON.SAVE_CHANGES' | translate) : ('VEHICLE_FORM.PUBLISH_VEHICLE' | translate) }}
+    </button>
+  </form>
+</div>

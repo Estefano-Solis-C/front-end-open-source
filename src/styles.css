@@ -1,0 +1,78 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'assets/styles/colors.css';
+
+body {
+  background-color: #f8f9fa; /* Light gray page background */
+  color: var(--text-dark);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0;
+}
+
+/* Unified style for page headers (H1) */
+.page-header {
+  color: var(--primary-color);
+  font-size: 2.5em;
+  font-weight: 700;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 20px;
+}
+
+/* Base style for application cards */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0, 30, 80, 0.07);
+  overflow: hidden;
+  /* The card is a flex container stacking children vertically */
+  display: flex;
+  flex-direction: column;
+  /* Ensure the card fills its grid cell */
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 30, 80, 0.12);
+}
+
+/* Unified style for action buttons */
+.action-button {
+  display: inline-block;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.action-button.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+.action-button.primary:hover:not(:disabled) {
+  background-color: #002c4f;
+  transform: translateY(-2px);
+}
+
+.action-button.secondary {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+.action-button.secondary:hover {
+  background-color: #3aa5e8;
+  color: white; /* Better contrast on hover */
+}
+
+.loading-message, .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.2em;
+  color: #777;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0, 30, 80, 0.07);
+}

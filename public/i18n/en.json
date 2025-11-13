@@ -1,0 +1,160 @@
+{
+  "HEADER": {
+    "WELCOME_GUEST": "Welcome, Guest",
+    "WELCOME_USER": "Welcome, {{name}}",
+    "LOGOUT": "Logout"
+  },
+  "SIDEBAR": {
+    "DASHBOARD": "Dashboard",
+    "SEARCH_VEHICLES": "Search Vehicles",
+    "MY_BOOKINGS": "My Bookings",
+    "MY_VEHICLES": "My Vehicles",
+    "PUBLISH_VEHICLE": "Publish Vehicle",
+    "REQUESTS": "Requests",
+    "PROFILE": "My Profile"
+  },
+  "LOGIN": {
+    "TITLE": "Login",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "BUTTON": "Sign In",
+    "REGISTER_LINK": "Don't have an account? Register",
+    "NO_ACCOUNT": "Don't have an account?",
+    "REGISTER": "Register"
+  },
+  "MY_BOOKINGS": {
+    "TITLE": "My Bookings",
+    "NO_BOOKINGS": "You don't have any bookings yet.",
+    "LOADING": "Loading bookings...",
+    "DAYS_REMAINING": "{{days}} day(s) remaining",
+    "MANAGE_BOOKING": "Manage Booking"
+  },
+  "DASHBOARD": {
+    "TITLE": "Owner's Dashboard",
+    "TOTAL_INCOME": "Total Income",
+    "ACTIVE_RENTALS": "Active Rentals",
+    "REGISTERED_VEHICLES": "Registered Vehicles",
+    "TOP_VEHICLES": "My Most Popular Vehicles",
+    "RENTALS_COUNT": "rental(s)"
+  },
+  "DASHBOARD_ARRENDATARIO": {
+    "TITLE": "Dashboard",
+    "SUBTITLE": "Here's a quick summary of your activity.",
+    "AVAILABLE_VEHICLES": "Available Vehicles",
+    "VIEW_ALL": "View all ›",
+    "NEXT_BOOKING": "Your Next Booking",
+    "ACTIVE_BOOKINGS": "Your Active Bookings",
+    "NO_UPCOMING_BOOKINGS": "You have no upcoming active bookings."
+  },
+  "VEHICLE": {
+    "PER_DAY": "/ day",
+    "OWNER": "Owner",
+    "STATUS_AVAILABLE": "Available",
+    "STATUS_RENTED": "Rented",
+    "UNKNOWN_OWNER": "Unknown Owner"
+  },
+  "VEHICLE_LIST": {
+    "TITLE": "Available Vehicles",
+    "VIEW_DETAILS": "View details",
+    "NO_VEHICLES": "There are no vehicles available for now."
+  },
+  "VEHICLE_DETAIL": {
+    "YEAR": "Year",
+    "PRICE": "Price",
+    "RENT_NOW": "Rent Now"
+  },
+  "BOOKING_DETAIL": {
+    "TITLE": "Manage Booking",
+    "FROM": "From",
+    "TO": "To",
+    "DAYS_REMAINING": "Days Remaining",
+    "TOTAL_PRICE": "Total Price",
+    "STATUS": "Status",
+    "CANCEL_BOOKING": "Cancel Booking",
+    "RENEW_BOOKING": "Renew Booking",
+    "DELETE_BOOKING": "Delete Booking",
+    "INACTIVE_BOOKING": "This booking is no longer active.",
+    "REVIEW_PROMPT": "You can leave a review once your rental is finished or cancelled."
+  },
+  "PROFILE": {
+    "TITLE": "My Profile",
+    "EDIT_INFO": "Edit Information",
+    "PERSONAL_INFO": "Personal Information",
+    "FULL_NAME": "Full Name",
+    "ROLE": "Role",
+    "CHANGE_PASSWORD": "Change Password",
+    "CURRENT_PASSWORD": "Current Password",
+    "NEW_PASSWORD": "New Password",
+    "CONFIRM_NEW_PASSWORD": "Confirm New Password",
+    "UPDATE_PASSWORD": "Update Password",
+    "DANGER_ZONE": "Danger Zone",
+    "DELETE_ACCOUNT": "Delete Account",
+    "DELETE_ACCOUNT_WARNING": "This action is permanent and cannot be undone."
+  },
+  "ROLES": {
+    "ARRENDADOR": "Lessor",
+    "ARRENDATARIO": "Renter"
+  },
+  "REVIEWS": {
+    "CLIENT_OPINIONS": "Customer Opinions",
+    "LOADING": "Loading reviews...",
+    "PAGINATION": "Page {{current}} of {{total}}",
+    "NO_REVIEWS": "This vehicle has no reviews yet."
+  },
+  "REVIEW_FORM": {
+    "WRITE_OPINION": "Write your opinion",
+    "YOUR_RATING": "Your rating:",
+    "YOUR_COMMENT": "Your comment:",
+    "SUBMIT_REVIEW": "Submit Review",
+    "VALIDATION_REQUIRED": "Please complete rating and comment.",
+    "THANK_YOU": "Thanks for your review!",
+    "ERROR_SUBMIT": "There was an error submitting your review."
+  },
+  "COMMON": {
+    "CANCEL": "Cancel",
+    "SAVE_CHANGES": "Save Changes"
+  },
+  "BOOKING_PROCESS": {
+    "TITLE_CREATE": "Confirm Booking",
+    "TITLE_RENEW": "Renew Booking",
+    "VEHICLE_SUMMARY": "Vehicle Summary",
+    "PRICE_PER_DAY": "Price per day",
+    "SUBTITLE_CREATE": "Select the dates",
+    "SUBTITLE_RENEW": "Select the new end date",
+    "START_DATE": "Start Date",
+    "END_DATE": "End Date",
+    "TOTAL_TO_PAY": "Total to Pay",
+    "DAYS_COUNT": "{{days}} day(s)",
+    "BUTTON_CREATE": "Confirm and Pay",
+    "BUTTON_RENEW": "Update Booking"
+  },
+  "MY_VEHICLES": {
+    "TITLE": "My Published Vehicles",
+    "PUBLISH_NEW": "Publish New Vehicle",
+    "EMPTY_LINE1": "You haven't published any vehicles yet.",
+    "EMPTY_LINE2": "Click \"Publish New Vehicle\" to get started!",
+    "MONITOR": "Monitor",
+    "EDIT": "Edit"
+  },
+  "VEHICLE_FORM": {
+    "TITLE_EDIT": "Edit Vehicle",
+    "TITLE_CREATE": "Publish Vehicle",
+    "BRAND": "Brand",
+    "MODEL": "Model",
+    "IMAGE_URL": "Image URL",
+    "PUBLISH_VEHICLE": "Publish Vehicle",
+    "PUBLISH_SUCCESS": "Vehicle published successfully!"
+  },
+  "BOOKING_REQUESTS": {
+    "TITLE": "Booking Requests",
+    "LOADING": "Loading requests...",
+    "EMPTY": "You don't have any bookings for your vehicles yet.",
+    "CLIENT_ID": "Client ID",
+    "USER": "User",
+    "DATES": "Dates",
+    "DATE_RANGE": "{{start}} to {{end}}",
+    "INCOME": "Income",
+    "ACCEPT": "Accept",
+    "REJECT": "Reject"
+  }
+}

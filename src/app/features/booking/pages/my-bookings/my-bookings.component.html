@@ -1,0 +1,40 @@
+<h1 class="page-header">{{ 'MY_BOOKINGS.TITLE' | translate }}</h1>
+
+<div *ngIf="isLoading" class="loading-message">{{ 'MY_BOOKINGS.LOADING' | translate }}</div>
+
+<div *ngIf="!isLoading && bookingsWithDetails.length === 0" class="empty-state">
+  <p>{{ 'MY_BOOKINGS.NO_BOOKINGS' | translate }}</p>
+</div>
+
+<div class="bookings-grid" *ngIf="!isLoading && bookingsWithDetails.length > 0">
+  <div class="card booking-card" *ngFor="let item of bookingsWithDetails">
+
+    <div class="card-image-wrapper">
+      <img [src]="item.vehicle.imageUrl" class="vehicle-image" alt="{{ item.vehicle.brand }}">
+      <div class="days-remaining-badge" *ngIf="item.booking.status === 'activa'">
+        {{ 'MY_BOOKINGS.DAYS_REMAINING' | translate: {days: item.daysRemaining} }}
+      </div>
+    </div>
+
+    <div class="card-content">
+      <h3>{{ item.vehicle.brand }} {{ item.vehicle.model }}</h3>
+      <p class="booking-dates">{{ item.booking.startDate | date: 'dd MMM yyyy' }} - {{ item.booking.endDate | date: 'dd MMM yyyy' }}</p>
+      <div class="price-status-wrapper">
+        <p class="total-price">S/ {{ item.booking.totalPrice }}</p>
+        <span class="status-badge" [ngClass]="item.booking.status">{{ item.booking.status }}</span>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <a [routerLink]="['/my-bookings', item.booking.id]" class="action-button secondary">
+        {{ 'MY_BOOKINGS.MANAGE_BOOKING' | translate }}
+      </a>
+      <button *ngIf="item.booking.status === 'PENDING' || item.booking.status === 'CONFIRMED'"
+              (click)="cancelBooking(item.booking.id)"
+              class="action-button btn-danger">
+        {{ 'MY_BOOKINGS.CANCEL_BOOKING' | translate }}
+      </button>
+    </div>
+
+  </div>
+</div>

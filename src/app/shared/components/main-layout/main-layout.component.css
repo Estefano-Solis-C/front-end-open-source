@@ -1,0 +1,44 @@
+.main-layout {
+  display: flex;
+  position: relative; /* Needed for backdrop z-index */
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px; /* Sidebar width on desktop */
+  width: calc(100% - 280px);
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.page-content {
+  padding: 30px;
+  background-color: #f8f9fa;
+  flex-grow: 1;
+}
+
+/* Backdrop styles on mobile */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Just below the sidebar */
+  display: none; /* Hidden by default */
+}
+
+/* --- RESPONSIVE LOGIC --- */
+@media (max-width: 992px) {
+  .content {
+    margin-left: 0; /* Full width content on mobile */
+    width: 100%;
+  }
+
+  /* Show backdrop only on mobile when sidebar is visible */
+  .backdrop {
+    display: block;
+  }
+}

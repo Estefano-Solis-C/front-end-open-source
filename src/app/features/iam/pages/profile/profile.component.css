@@ -1,0 +1,230 @@
+:host {
+  display: block;
+}
+
+.profile-page-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.profile-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 0 10px;
+}
+
+.profile-header-section h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 2.5em;
+  font-weight: 700;
+}
+
+.edit-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 10px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.edit-profile-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 63, 112, 0.2);
+}
+
+/* --- INICIO DE LA NUEVA LÓGICA DE GRID --- */
+
+.profile-grid {
+  display: grid;
+  gap: 30px;
+  /* Por defecto (móvil), es una sola columna */
+  grid-template-columns: 1fr;
+}
+
+/* En pantallas más grandes, cambiamos a 2 columnas */
+@media (min-width: 992px) {
+  .profile-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.profile-card {
+  background-color: white;
+  padding: 30px 35px;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 30, 80, 0.08);
+}
+
+.profile-card h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: var(--primary-color);
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 15px;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+/* --- FIN DE LA NUEVA LÓGICA DE GRID --- */
+
+
+/* --- ESTILOS PARA MODO VISTA --- */
+.info-item {
+  margin-bottom: 25px;
+}
+.info-item label {
+  font-size: 0.9em;
+  color: #888;
+  margin-bottom: 6px;
+  display: block;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.info-item p {
+  font-size: 1.15em;
+  color: #333;
+  margin: 0;
+}
+.role-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: capitalize;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+.role-badge.arrendador {
+  background-color: #fff0e1;
+  color: #ff9800;
+}
+.role-badge.arrendatario {
+  background-color: #e6f3ff;
+  color: #007bff;
+}
+
+/* --- ESTILOS PARA FORMULARIOS --- */
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 1em;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(82, 182, 242, 0.3);
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+.action-button {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+.action-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.cancel-button {
+  background-color: #f1f1f1;
+  color: #555;
+}
+.cancel-button:hover {
+  background-color: #e2e2e2;
+}
+.save-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+.save-button:hover:not(:disabled) {
+  background-color: #002c4f;
+}
+.save-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- REDISEÑO DE ZONA DE PELIGRO --- */
+.danger-zone {
+  background: #fffafa;
+  border-left: 4px solid #dc3545;
+}
+@media (min-width: 992px) {
+  .danger-zone {
+    /* En pantallas grandes, hacemos que ocupe las 2 columnas */
+    grid-column: 1 / -1;
+  }
+}
+.danger-zone h2 {
+  color: #dc3545;
+  border-bottom-color: #f8d7da;
+}
+.danger-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.danger-info h4 {
+  margin: 0 0 5px 0;
+  color: #721c24;
+}
+.danger-info p {
+  margin: 0;
+  color: #721c24;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  flex-shrink: 0;
+}
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+/* Ajuste final para móvil */
+@media (max-width: 768px) {
+  .danger-option {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

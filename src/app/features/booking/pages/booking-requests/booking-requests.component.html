@@ -1,0 +1,34 @@
+<h1 class="page-header">{{ 'BOOKING_REQUESTS.TITLE' | translate }}</h1>
+
+<div *ngIf="isLoading" class="loading-message">{{ 'BOOKING_REQUESTS.LOADING' | translate }}</div>
+
+<div *ngIf="!isLoading && bookingRequests.length === 0" class="empty-state">
+  <p>{{ 'BOOKING_REQUESTS.EMPTY' | translate }}</p>
+</div>
+
+<div class="requests-grid" *ngIf="!isLoading && bookingRequests.length > 0">
+  <div class="request-card" *ngFor="let item of bookingRequests">
+    <img [src]="item.vehicle.imageUrl" class="vehicle-image" [alt]="item.vehicle.brand + ' ' + item.vehicle.model" />
+    <div class="card-content">
+      <h3>{{ item.vehicle.brand }} {{ item.vehicle.model }}</h3>
+      <p><strong>{{ 'BOOKING_REQUESTS.CLIENT_ID' | translate }}:</strong> {{ 'BOOKING_REQUESTS.USER' | translate }} #{{ item.booking.userId }}</p>
+      <p>
+        <strong>{{ 'BOOKING_REQUESTS.DATES' | translate }}:</strong>
+        {{ 'BOOKING_REQUESTS.DATE_RANGE' | translate: { start: (item.booking.startDate | date: 'dd/MM/yyyy'), end: (item.booking.endDate | date: 'dd/MM/yyyy') } }}
+      </p>
+      <p><strong>{{ 'BOOKING_REQUESTS.INCOME' | translate }}:</strong> <span class="price">S/ {{ item.booking.totalPrice }}</span></p>
+    </div>
+    <div class="card-status" [ngClass]="item.booking.status">
+      {{ item.booking.status }}
+    </div>
+
+    <div class="card-actions" *ngIf="item.booking.status === 'PENDING'">
+      <button class="action-button accept" (click)="onConfirm(item.booking.id)" [disabled]="processing[item.booking.id]">
+        {{ 'BOOKING_REQUESTS.ACCEPT' | translate }}
+      </button>
+      <button class="action-button reject" (click)="onReject(item.booking.id)" [disabled]="processing[item.booking.id]">
+        {{ 'BOOKING_REQUESTS.REJECT' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<h1 class="page-header">{{ 'DASHBOARD_ARRENDATARIO.TITLE' | translate }}</h1>
+<p class="subtitle">{{ 'DASHBOARD_ARRENDATARIO.SUBTITLE' | translate }}</p>
+
+<div *ngIf="isLoading" class="loading-message">{{ 'MY_BOOKINGS.LOADING' | translate }}</div>
+
+<div *ngIf="!isLoading" class="dashboard-grid">
+  <div class="card">
+    <div class="card-header">
+      <h2>{{ 'DASHBOARD_ARRENDATARIO.AVAILABLE_VEHICLES' | translate }}</h2>
+      <a routerLink="/vehicles" class="see-all-button">{{ 'DASHBOARD_ARRENDATARIO.VIEW_ALL' | translate }}</a>
+    </div>
+    <div class="card-content">
+      <div *ngIf="previewVehicles.length > 0; else noVehicles" class="item-list">
+        <a *ngFor="let vehicle of previewVehicles" [routerLink]="['/vehicles', vehicle.id]" class="preview-item">
+          <img [src]="vehicle.imageUrl" [alt]="vehicle.brand">
+          <div class="item-info">
+            <h4>{{ vehicle.brand }} {{ vehicle.model }} ({{ vehicle.year }})</h4>
+            <p>S/ {{ vehicle.pricePerDay }} {{ 'VEHICLE.PER_DAY' | translate }}</p>
+          </div>
+        </a>
+      </div>
+      <ng-template #noVehicles>
+        <div class="empty-state-inner">{{ 'VEHICLE_LIST.NO_VEHICLES' | translate }}</div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>{{ 'DASHBOARD_ARRENDATARIO.ACTIVE_BOOKINGS' | translate }}</h2>
+      <a routerLink="/my-bookings" class="see-all-button">{{ 'DASHBOARD_ARRENDATARIO.VIEW_ALL' | translate }}</a>
+    </div>
+    <div class="card-content">
+      <div *ngIf="activeBookings.length > 0; else noBookings" class="item-list">
+        <a *ngFor="let item of activeBookings" [routerLink]="['/my-bookings', item.booking.id]" class="preview-item">
+          <img [src]="item.vehicle.imageUrl" [alt]="item.vehicle.brand">
+          <div class="item-info">
+            <h4>{{ item.vehicle.brand }} {{ item.vehicle.model }}</h4>
+            <p><strong>{{ 'BOOKING_DETAIL.FROM' | translate }}:</strong> {{ item.booking.startDate | date: 'dd MMM yyyy' }}</p>
+          </div>
+        </a>
+      </div>
+      <ng-template #noBookings>
+        <div class="empty-state-inner">
+          <p>{{ 'DASHBOARD_ARRENDATARIO.NO_UPCOMING_BOOKINGS' | translate }}</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div *ngIf="!vehicle" class="loading-message">{{ 'MY_BOOKINGS.LOADING' | translate }}</div>
+
+<div class="detail-container" *ngIf="vehicle">
+  <a routerLink="/vehicles" class="back-link">‹ {{ 'VEHICLE_LIST.TITLE' | translate }}</a>
+  <h1 class="page-header">{{ vehicle.brand }} {{ vehicle.model }}</h1>
+
+  <div class="detail-grid">
+    <div class="image-gallery">
+      <img [src]="vehicle.imageUrl" alt="Imagen de {{ vehicle.brand }} {{ vehicle.model }}">
+    </div>
+
+    <div class="card info-card">
+      <div class="info-grid">
+        <div class="info-item">
+          <label>{{ 'VEHICLE_DETAIL.YEAR' | translate }}</label>
+          <p>{{ vehicle.year }}</p>
+        </div>
+        <div class="info-item">
+          <label>{{ 'VEHICLE_DETAIL.PRICE' | translate }}</label>
+          <p>S/ {{ vehicle.pricePerDay }} / {{ 'VEHICLE.PER_DAY' | translate }}</p>
+        </div>
+        <div class="info-item">
+          <label>{{ 'VEHICLE.OWNER' | translate }}</label>
+          <p>{{ vehicle.ownerName }}</p>
+        </div>
+        <div class="info-item">
+          <label>{{ 'BOOKING_DETAIL.STATUS' | translate }}</label>
+          <p class="status" [ngClass]="vehicle.status">{{ vehicle.status === 'available' ? ('VEHICLE.STATUS_AVAILABLE' | translate) : ('VEHICLE.STATUS_RENTED' | translate) }}</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="action-button primary" [routerLink]="['/booking', vehicle.id]" [disabled]="vehicle.status === 'rented'">
+          {{ 'VEHICLE_DETAIL.RENT_NOW' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-section">
+    <app-review-list [vehicleId]="vehicle.id"></app-review-list>
+  </div>
+</div>

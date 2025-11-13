@@ -1,0 +1,115 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  overflow: auto; /* Permite scroll si el contenido es muy alto en pantallas pequeñas */
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Asegura que ocupe toda la altura */
+  background: linear-gradient(135deg, var(--primary-color) 0%, #005f9e 100%);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.auth-card {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 2em;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(82, 182, 242, 0.3);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #002c4f;
+  transform: translateY(-2px);
+}
+
+.switch-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.switch-link a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Estilos para selección de rol en Registro */
+.role-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.role-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.role-options input[type="radio"] {
+  accent-color: var(--primary-color);
+}

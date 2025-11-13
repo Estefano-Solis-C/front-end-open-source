@@ -1,0 +1,58 @@
+<div *ngIf="isLoading" class="loading-message">{{ 'MY_BOOKINGS.LOADING' | translate }}</div>
+
+<div class="detail-container" *ngIf="!isLoading && vehicle && booking">
+  <a routerLink="/my-bookings" class="back-link">‹ {{ 'MY_BOOKINGS.TITLE' | translate }}</a>
+  <h1 class="page-header">{{ 'BOOKING_DETAIL.TITLE' | translate }}</h1>
+
+  <div class="detail-grid">
+    <div class="image-gallery">
+      <img [src]="vehicle.imageUrl" alt="Imagen de {{ vehicle.brand }} {{ vehicle.model }}">
+    </div>
+
+    <div class="card info-card">
+      <h2>{{ vehicle.brand }} {{ vehicle.model }}</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>{{ 'BOOKING_DETAIL.FROM' | translate }}:</strong>
+          <p>{{ booking.startDate | date: 'dd MMM yyyy' }}</p>
+        </div>
+        <div class="info-item">
+          <strong>{{ 'BOOKING_DETAIL.TO' | translate }}:</strong>
+          <p>{{ booking.endDate | date: 'dd MMM yyyy' }}</p>
+        </div>
+        <div class="info-item">
+          <strong>{{ 'BOOKING_DETAIL.DAYS_REMAINING' | translate }}:</strong>
+          <p>{{ daysRemaining }}</p>
+        </div>
+        <div class="info-item">
+          <strong>{{ 'BOOKING_DETAIL.TOTAL_PRICE' | translate }}:</strong>
+          <p>S/ {{ booking.totalPrice }}</p>
+        </div>
+        <div class="info-item status-item">
+          <strong>{{ 'BOOKING_DETAIL.STATUS' | translate }}:</strong>
+          <p class="status" [ngClass]="booking.status">{{ booking.status }}</p>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="booking-actions" *ngIf="booking.status === 'activa'">
+          <button (click)="cancelBooking()" class="action-button cancel-button">{{ 'BOOKING_DETAIL.CANCEL_BOOKING' | translate }}</button>
+          <button (click)="renewBooking()" class="action-button renew-button">{{ 'BOOKING_DETAIL.RENEW_BOOKING' | translate }}</button>
+        </div>
+        <div class="booking-actions" *ngIf="booking.status === 'cancelada'">
+          <button (click)="deleteBooking()" class="action-button delete-button">{{ 'BOOKING_DETAIL.DELETE_BOOKING' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-section">
+    <app-review-list [vehicleId]="vehicle.id"></app-review-list>
+    <div *ngIf="booking.status === 'activa'" class="review-prompt">{{ 'BOOKING_DETAIL.REVIEW_PROMPT' | translate }}</div>
+    <app-review-form
+      *ngIf="booking.status === 'finalizada' || booking.status === 'cancelada'"
+      [vehicleId]="vehicle.id"
+      (reviewPosted)="onReviewPosted()">
+    </app-review-form>
+  </div>
+</div>

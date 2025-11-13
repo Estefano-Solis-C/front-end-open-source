@@ -1,0 +1,32 @@
+<h1 class="page-header">{{ 'DASHBOARD.TITLE' | translate }}</h1>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="icon-circle income">💰</div>
+    <h3>{{ 'DASHBOARD.TOTAL_INCOME' | translate }}</h3>
+    <p>S/ {{ totalIncome.toFixed(2) }}</p>
+  </div>
+  <div class="stat-card">
+    <div class="icon-circle active-rentals">🚗</div>
+    <h3>{{ 'DASHBOARD.ACTIVE_RENTALS' | translate }}</h3>
+    <p>{{ activeRentals }}</p>
+  </div>
+  <div class="stat-card">
+    <div class="icon-circle total-vehicles">🔑</div>
+    <h3>{{ 'DASHBOARD.REGISTERED_VEHICLES' | translate }}</h3>
+    <p>{{ totalVehicles }}</p>
+  </div>
+</div>
+
+<div class="top-vehicles-section">
+  <h2>🏆 {{ 'DASHBOARD.TOP_VEHICLES' | translate }}</h2>
+  <div class="top-vehicles-list">
+    <a *ngFor="let vehicle of topVehicles" [routerLink]="['/vehicles', vehicle.id]" class="vehicle-item">
+      <img [src]="vehicle.imageUrl" alt="{{ vehicle.brand }}">
+      <div class="vehicle-info">
+        <h4>{{ vehicle.brand }} {{ vehicle.model }}</h4>
+        <p>{{ vehicle.rentalCount }} {{ 'DASHBOARD.RENTALS_COUNT' | translate }}</p>
+      </div>
+    </a>
+  </div>
+</div>

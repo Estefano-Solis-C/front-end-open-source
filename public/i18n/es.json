@@ -1,0 +1,189 @@
+{
+  "HEADER": {
+    "WELCOME_GUEST": "Bienvenido, Invitado",
+    "WELCOME_USER": "Bienvenido, {{name}}",
+    "LOGOUT": "Cerrar Sesión"
+  },
+  "SIDEBAR": {
+    "DASHBOARD": "Dashboard",
+    "SEARCH_VEHICLES": "Buscar Vehículos",
+    "MY_BOOKINGS": "Mis Reservas",
+    "MY_VEHICLES": "Mis Vehículos",
+    "PUBLISH_VEHICLE": "Publicar Vehículo",
+    "REQUESTS": "Solicitudes",
+    "PROFILE": "Mi Perfil"
+  },
+  "LOGIN": {
+    "TITLE": "Iniciar Sesión",
+    "EMAIL": "Correo Electrónico",
+    "PASSWORD": "Contraseña",
+    "BUTTON": "Ingresar",
+    "REGISTER_LINK": "¿No tienes cuenta? Regístrate",
+    "NO_ACCOUNT": "¿No tienes cuenta?",
+    "REGISTER": "Regístrate",
+    "INVALID_CREDENTIALS": "Credenciales inválidas",
+    "REGISTER_SUCCESS": "¡Cuenta creada con éxito! Ahora puedes iniciar sesión.",
+    "REGISTER_ERROR": "Hubo un error al crear la cuenta. Inténtalo de nuevo."
+  },
+  "REGISTER": {
+    "TITLE": "Crear Cuenta",
+    "ROLE_PROMPT": "Quiero registrarme como:",
+    "ROLE_RENTER_OPTION": "Arrendatario (para alquilar)",
+    "ROLE_OWNER_OPTION": "Arrendador (para publicar)",
+    "SWITCH_TO_LOGIN": "¿Ya tienes cuenta? Inicia Sesión"
+  },
+  "MY_BOOKINGS": {
+    "TITLE": "Mis Reservas",
+    "NO_BOOKINGS": "Aún no tienes ninguna reserva.",
+    "LOADING": "Cargando reservas...",
+    "DAYS_REMAINING": "{{days}} día(s) restante(s)",
+    "MANAGE_BOOKING": "Gestionar Reserva"
+  },
+  "DASHBOARD": {
+    "TITLE": "Dashboard del Arrendador",
+    "TOTAL_INCOME": "Ingresos Totales",
+    "ACTIVE_RENTALS": "Alquileres Activos",
+    "REGISTERED_VEHICLES": "Vehículos Registrados",
+    "TOP_VEHICLES": "Mis Vehículos Más Populares",
+    "RENTALS_COUNT": "alquiler(es)"
+  },
+  "DASHBOARD_ARRENDATARIO": {
+    "TITLE": "Dashboard",
+    "SUBTITLE": "Aquí tienes un resumen rápido de tu actividad.",
+    "AVAILABLE_VEHICLES": "Vehículos Disponibles",
+    "VIEW_ALL": "Ver todos ›",
+    "NEXT_BOOKING": "Tu Próxima Reserva",
+    "ACTIVE_BOOKINGS": "Tus Reservas Activas",
+    "NO_UPCOMING_BOOKINGS": "No tienes ninguna reserva activa próximamente."
+  },
+  "VEHICLE": {
+    "PER_DAY": "/ día",
+    "OWNER": "Propietario",
+    "STATUS_AVAILABLE": "Disponible",
+    "STATUS_RENTED": "Alquilado",
+    "UNKNOWN_OWNER": "Propietario Desconocido"
+  },
+  "VEHICLE_LIST": {
+    "TITLE": "Vehículos Disponibles",
+    "VIEW_DETAILS": "Ver detalles",
+    "NO_VEHICLES": "No hay ningún vehículo disponible por ahora."
+  },
+  "VEHICLE_DETAIL": {
+    "YEAR": "Año",
+    "PRICE": "Precio",
+    "RENT_NOW": "Alquilar Ahora"
+  },
+  "BOOKING_DETAIL": {
+    "TITLE": "Gestionar Reserva",
+    "FROM": "Desde",
+    "TO": "Hasta",
+    "DAYS_REMAINING": "Días Restantes",
+    "TOTAL_PRICE": "Precio Total",
+    "STATUS": "Estado",
+    "CANCEL_BOOKING": "Cancelar Reserva",
+    "RENEW_BOOKING": "Renovar Reserva",
+    "DELETE_BOOKING": "Eliminar Reserva",
+    "INACTIVE_BOOKING": "Esta reserva ya no está activa.",
+    "REVIEW_PROMPT": "Podrás dejar una reseña cuando finalice o canceles tu alquiler.",
+    "CONFIRM_CANCEL": "¿Estás seguro de que deseas cancelar esta reserva?",
+    "CANCEL_SUCCESS": "Reserva cancelada con éxito. Ahora puedes dejar una reseña si lo deseas.",
+    "CANCEL_ERROR": "No se pudo cancelar la reserva. Inténtalo de nuevo.",
+    "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar permanentemente esta reserva del historial?",
+    "DELETE_SUCCESS": "La reserva ha sido eliminada.",
+    "DELETE_ERROR": "No se pudo eliminar la reserva.",
+    "STATUS_ACTIVE": "Activa",
+    "STATUS_CANCELLED": "Cancelada",
+    "STATUS_FINISHED": "Finalizada"
+  },
+  "PROFILE": {
+    "TITLE": "Mi Perfil",
+    "EDIT_INFO": "Editar Información",
+    "PERSONAL_INFO": "Información Personal",
+    "FULL_NAME": "Nombre Completo",
+    "ROLE": "Rol",
+    "CHANGE_PASSWORD": "Cambiar Contraseña",
+    "CURRENT_PASSWORD": "Contraseña Actual",
+    "NEW_PASSWORD": "Nueva Contraseña",
+    "CONFIRM_NEW_PASSWORD": "Confirmar Nueva Contraseña",
+    "UPDATE_PASSWORD": "Actualizar Contraseña",
+    "DANGER_ZONE": "Zona de Peligro",
+    "DELETE_ACCOUNT": "Eliminar Cuenta",
+    "DELETE_ACCOUNT_WARNING": "Esta acción es permanente y no se puede deshacer.",
+    "UPDATE_INFO_SUCCESS": "Información actualizada con éxito.",
+    "UPDATE_INFO_ERROR": "Hubo un error al actualizar tus datos.",
+    "VALIDATION_REQUIRED": "Por favor, completa todos los campos.",
+    "PASSWORD_MISMATCH": "La nueva contraseña y su confirmación no coinciden.",
+    "UPDATE_PASSWORD_SUCCESS": "Contraseña cambiada con éxito.",
+    "UPDATE_PASSWORD_ERROR": "La contraseña actual es incorrecta o hubo un error al cambiarla.",
+    "DELETE_ACCOUNT_CONFIRM": "Esta acción es permanente. Para confirmar, escribe tu email:",
+    "DELETE_ACCOUNT_SUCCESS": "Tu cuenta ha sido eliminada.",
+    "DELETE_ACCOUNT_ERROR": "Hubo un error al eliminar tu cuenta.",
+    "DELETE_ACCOUNT_EMAIL_MISMATCH": "El email no coincide. La operación ha sido cancelada."
+  },
+  "ROLES": {
+    "ARRENDADOR": "Arrendador",
+    "ARRENDATARIO": "Arrendatario"
+  },
+  "REVIEWS": {
+    "CLIENT_OPINIONS": "Opiniones de Clientes",
+    "LOADING": "Cargando opiniones...",
+    "PAGINATION": "Página {{current}} de {{total}}",
+    "NO_REVIEWS": "Este vehículo aún no tiene reseñas."
+  },
+  "REVIEW_FORM": {
+    "WRITE_OPINION": "Escribe tu opinión",
+    "YOUR_RATING": "Tu calificación:",
+    "YOUR_COMMENT": "Tu comentario:",
+    "SUBMIT_REVIEW": "Enviar Reseña",
+    "VALIDATION_REQUIRED": "Por favor, completa la calificación y el comentario.",
+    "THANK_YOU": "¡Gracias por tu reseña!",
+    "ERROR_SUBMIT": "Hubo un error al enviar tu reseña."
+  },
+  "COMMON": {
+    "CANCEL": "Cancelar",
+    "SAVE_CHANGES": "Guardar Cambios"
+  },
+  "BOOKING_PROCESS": {
+    "TITLE_CREATE": "Confirmar Reserva",
+    "TITLE_RENEW": "Renovar Reserva",
+    "VEHICLE_SUMMARY": "Resumen del Vehículo",
+    "PRICE_PER_DAY": "Precio por día",
+    "SUBTITLE_CREATE": "Selecciona las fechas",
+    "SUBTITLE_RENEW": "Selecciona la nueva fecha final",
+    "START_DATE": "Fecha de Inicio",
+    "END_DATE": "Fecha de Fin",
+    "TOTAL_TO_PAY": "Total a Pagar",
+    "DAYS_COUNT": "{{days}} día(s)",
+    "BUTTON_CREATE": "Confirmar y Pagar",
+    "BUTTON_RENEW": "Actualizar Reserva"
+  },
+  "MY_VEHICLES": {
+    "TITLE": "Mis Vehículos Publicados",
+    "PUBLISH_NEW": "Publicar Nuevo Vehículo",
+    "EMPTY_LINE1": "Aún no has publicado ningún vehículo.",
+    "EMPTY_LINE2": "¡Haz clic en \"Publicar Nuevo Vehículo\" para empezar!",
+    "MONITOR": "Monitorear",
+    "EDIT": "Editar"
+  },
+  "VEHICLE_FORM": {
+    "TITLE_EDIT": "Editar Vehículo",
+    "TITLE_CREATE": "Publicar Vehículo",
+    "BRAND": "Marca",
+    "MODEL": "Modelo",
+    "IMAGE_URL": "URL de la Imagen",
+    "PUBLISH_VEHICLE": "Publicar Vehículo",
+    "PUBLISH_SUCCESS": "¡Vehículo publicado con éxito!"
+  },
+  "BOOKING_REQUESTS": {
+    "TITLE": "Solicitudes de Reserva",
+    "LOADING": "Cargando solicitudes...",
+    "EMPTY": "Todavía no tienes ninguna reserva para tus vehículos.",
+    "CLIENT_ID": "Cliente ID",
+    "USER": "Usuario",
+    "DATES": "Fechas",
+    "DATE_RANGE": "{{start}} al {{end}}",
+    "INCOME": "Ingreso",
+    "ACCEPT": "Aceptar",
+    "REJECT": "Rechazar"
+  }
+}

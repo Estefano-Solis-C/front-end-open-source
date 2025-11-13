@@ -1,0 +1,32 @@
+<h1 class="page-header">{{ 'VEHICLE_LIST.TITLE' | translate }}</h1>
+
+<div *ngIf="isLoading" class="loading-message">{{ 'MY_BOOKINGS.LOADING' | translate }}</div>
+
+<div *ngIf="!isLoading && availableVehicles.length === 0" class="empty-state">
+  <p>{{ 'VEHICLE_LIST.NO_VEHICLES' | translate }}</p>
+</div>
+
+<div class="vehicle-grid" *ngIf="!isLoading && availableVehicles.length > 0">
+  <div class="card vehicle-card" *ngFor="let vehicle of availableVehicles">
+    <a [routerLink]="['/vehicles', vehicle.id]" class="card-main-link">
+      <div class="card-image-wrapper">
+        <img [src]="vehicle.imageUrl" class="vehicle-image" alt="{{ vehicle.brand }}">
+        <div class="overlay">
+          <span>{{ 'VEHICLE_LIST.VIEW_DETAILS' | translate }}</span>
+        </div>
+        <div class="status-badge" [ngClass]="vehicle.status">
+          {{ vehicle.status === 'available' ? ('VEHICLE.STATUS_AVAILABLE' | translate) : ('VEHICLE.STATUS_RENTED' | translate) }}
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>{{ vehicle.brand }} {{ vehicle.model }}</h3>
+        <p class="vehicle-year">{{ vehicle.year }}</p>
+        <div class="owner-info">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>{{ vehicle.ownerName }}</span>
+        </div>
+        <p class="price-per-day">S/ {{ vehicle.pricePerDay }} <span>{{ 'VEHICLE.PER_DAY' | translate }}</span></p>
+      </div>
+    </a>
+  </div>
+</div>

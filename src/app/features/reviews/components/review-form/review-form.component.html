@@ -1,0 +1,16 @@
+<div class="review-form-container">
+  <h3>{{ 'REVIEW_FORM.WRITE_OPINION' | translate }}</h3>
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+    <div class="form-group rating-group">
+      <label>{{ 'REVIEW_FORM.YOUR_RATING' | translate }}</label>
+      <div class="stars">
+        <button type="button" *ngFor="let i of [1,2,3,4,5]" (click)="setRating(i)" class="star" [class.filled]="i <= reviewForm.get('rating')?.value!">&#9733;</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="comment">{{ 'REVIEW_FORM.YOUR_COMMENT' | translate }}</label>
+      <textarea id="comment" rows="4" formControlName="comment" required></textarea>
+    </div>
+    <button type="submit" class="submit-button" [disabled]="reviewForm.invalid">{{ 'REVIEW_FORM.SUBMIT_REVIEW' | translate }}</button>
+  </form>
+</div>

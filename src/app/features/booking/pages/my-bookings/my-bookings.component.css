@@ -1,0 +1,84 @@
+.bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.card-image-wrapper {
+  position: relative;
+  height: 220px;
+}
+
+.vehicle-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.days-remaining-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: bold;
+  backdrop-filter: blur(4px);
+}
+
+.card-content {
+  padding: 25px;
+  flex-grow: 1; /* Esto es clave, empuja el footer hacia abajo */
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content h3 {
+  margin: 0 0 8px;
+  font-size: 1.5em;
+}
+
+.booking-dates {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.price-status-wrapper {
+  margin-top: auto; /* Empuja este contenido al fondo del .card-content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-price {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.status-badge {
+  padding: 5px 15px;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.status-badge.activa { background-color: #28a745; }
+.status-badge.finalizada { background-color: #6c757d; }
+.status-badge.cancelada { background-color: #dc3545; }
+
+.card-footer {
+  background-color: #f8f9fa;
+  padding: 20px; /* Un poco más de padding */
+  text-align: center;
+  border-top: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+/* LA LÍNEA DE 'width: 100%' HA SIDO ELIMINADA DE AQUÍ ABAJO */
+.card-footer .action-button {
+  /* Ya no necesita 'width: 100%' */
+}

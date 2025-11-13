@@ -1,0 +1,13 @@
+<div class="main-layout">
+  <app-sidebar [class.is-visible]="isSidebarVisible"></app-sidebar>
+
+  <main class="content">
+    <app-header (menuToggleClicked)="toggleSidebar()"></app-header>
+
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <div class="backdrop" *ngIf="isSidebarVisible" (click)="toggleSidebar()"></div>
+</div>

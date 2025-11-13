@@ -1,0 +1,30 @@
+<div class="review-list-container">
+  <h3>{{ 'REVIEWS.CLIENT_OPINIONS' | translate }}</h3>
+
+  <div *ngIf="isLoading" class="loading-reviews">{{ 'REVIEWS.LOADING' | translate }}</div>
+
+  <div *ngIf="!isLoading && allReviews.length > 0; else noReviews">
+    <div class="review-card" *ngFor="let review of pagedReviews">
+      <div class="rating">
+        <ng-container *ngFor="let i of [].constructor(review.rating)">
+          <span class="star filled">&#9733;</span>
+        </ng-container>
+        <ng-container *ngFor="let i of [].constructor(5 - review.rating)">
+          <span class="star empty">&#9733;</span>
+        </ng-container>
+      </div>
+      <p class="comment">"{{ review.comment }}"</p>
+      <small class="user">- {{ review.userName }}</small>
+    </div>
+
+    <div *ngIf="totalPages > 1" class="pagination-controls">
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+      <span>{{ 'REVIEWS.PAGINATION' | translate: {current: currentPage, total: totalPages} }}</span>
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
+    </div>
+  </div>
+
+  <ng-template #noReviews>
+    <p class="no-reviews-message">{{ 'REVIEWS.NO_REVIEWS' | translate }}</p>
+  </ng-template>
+</div>

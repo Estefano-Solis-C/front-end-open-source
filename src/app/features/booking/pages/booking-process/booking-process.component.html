@@ -1,0 +1,39 @@
+<h1 class="page-header">
+  {{ (isEditMode ? 'BOOKING_PROCESS.TITLE_RENEW' : 'BOOKING_PROCESS.TITLE_CREATE') | translate }}
+</h1>
+
+<div class="booking-process-container" *ngIf="vehicle">
+
+  <div class="card vehicle-summary">
+    <h2>{{ 'BOOKING_PROCESS.VEHICLE_SUMMARY' | translate }}</h2>
+    <img [src]="vehicle.imageUrl" [alt]="vehicle.brand">
+    <div class="summary-content">
+      <h3>{{ vehicle.brand }} {{ vehicle.model }} ({{ vehicle.year }})</h3>
+      <p class="price">S/ {{ vehicle.pricePerDay }} / <span>{{ 'VEHICLE.PER_DAY' | translate }}</span></p>
+    </div>
+  </div>
+
+  <div class="card booking-form">
+    <h2>
+      {{ (isEditMode ? 'BOOKING_PROCESS.SUBTITLE_RENEW' : 'BOOKING_PROCESS.SUBTITLE_CREATE') | translate }}
+    </h2>
+    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="startDate">{{ 'BOOKING_PROCESS.START_DATE' | translate }}</label>
+        <input type="date" id="startDate" formControlName="startDate" (change)="calculateTotal()">
+      </div>
+      <div class="form-group">
+        <label for="endDate">{{ 'BOOKING_PROCESS.END_DATE' | translate }}</label>
+        <input type="date" id="endDate" formControlName="endDate" (change)="calculateTotal()">
+      </div>
+      <div class="total-price" *ngIf="totalPrice > 0">
+        <label>{{ 'BOOKING_PROCESS.TOTAL_TO_PAY' | translate }}</label>
+        <p>S/ {{ totalPrice }}</p>
+        <small>{{ 'BOOKING_PROCESS.DAYS_COUNT' | translate: {days: totalDays} }}</small>
+      </div>
+      <button type="submit" class="action-button primary" [disabled]="bookingForm.invalid || totalPrice <= 0">
+        {{ (isEditMode ? 'BOOKING_PROCESS.BUTTON_RENEW' : 'BOOKING_PROCESS.BUTTON_CREATE') | translate }}
+      </button>
+    </form>
+  </div>
+</div>
