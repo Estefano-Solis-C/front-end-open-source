@@ -7,8 +7,11 @@
   <div class="info-card">
     <h2>Información en Tiempo Real</h2>
     <p><strong>Vehículo ID:</strong> {{ telemetry.vehicleId }}</p>
-    <p><strong>Ubicación:</strong> {{ telemetry.location }}</p>
-    <p><strong>Estado:</strong> <span class="status" [ngClass]="telemetry.status.replace(' ', '-')">{{ telemetry.status }}</span></p>
+    <p><strong>Latitud:</strong> {{ telemetry.latitude }}</p>
+    <p><strong>Longitud:</strong> {{ telemetry.longitude }}</p>
+    <p><strong>Velocidad:</strong> {{ telemetry.speed }} km/h</p>
+    <p><strong>Nivel de combustible:</strong> {{ telemetry.fuelLevel }} %</p>
+    <p><strong>Hora:</strong> {{ telemetry.timestamp }}</p>
   </div>
 </div>
 <ng-template #loading>

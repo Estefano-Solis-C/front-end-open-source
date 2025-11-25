@@ -5,8 +5,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Observable, take } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
-import { TranslateModule } from '@ngx-translate/core'; // Importar
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+/**
+ * Profile component allows viewing and updating user info,
+ * changing password and deleting the account.
+ */
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -18,13 +22,16 @@ export class ProfileComponent implements OnInit {
   currentUser$: Observable<User | null>;
   currentUser: User | null = null;
 
+  /** Form for basic user information */
   infoForm: FormGroup;
-  passwordForm: FormGroup; // Formulario para la contraseña
+  /** Form for password change */
+  passwordForm: FormGroup;
   isEditMode = false;
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translate: TranslateService
   ) {
     this.currentUser$ = this.authService.currentUser$;
 
@@ -33,7 +40,6 @@ export class ProfileComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]]
     });
 
-    // Inicializamos el formulario de contraseña
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -74,61 +80,56 @@ export class ProfileComponent implements OnInit {
 
     this.authService.updateUser(updatedUser).subscribe({
       next: () => {
-        alert('Información actualizada con éxito.');
-        this.isEditMode = false;
+        alert(this.translate.instant('PROFILE.UPDATE_INFO_SUCCESS'));
+        this.authService.logout();
       },
-      error: () => alert('Hubo un error al actualizar tus datos.')
+      error: () => alert(this.translate.instant('PROFILE.UPDATE_INFO_ERROR'))
     });
   }
 
-  // --- MÉTODO CORREGIDO ---
-  // Llama directamente a changePassword sin invocar login previamente
   onChangePassword(): void {
     if (this.passwordForm.invalid || !this.currentUser) {
-      alert('Por favor, completa todos los campos.');
+      alert(this.translate.instant('PROFILE.VALIDATION_REQUIRED'));
       return;
     }
 
     const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
 
     if (newPassword !== confirmPassword) {
-      alert('La nueva contraseña y su confirmación no coinciden.');
+      alert(this.translate.instant('PROFILE.PASSWORD_MISMATCH'));
       return;
     }
 
     this.authService.changePassword(this.currentUser!.id, currentPassword, newPassword).subscribe({
       next: () => {
-        alert('Contraseña cambiada con éxito.');
+        alert(this.translate.instant('PROFILE.UPDATE_PASSWORD_SUCCESS'));
         this.passwordForm.reset();
+        this.authService.logout();
       },
       error: (err) => {
-        // Contraseña actual incorrecta o error de backend
-        alert('La contraseña actual es incorrecta o hubo un error al cambiarla.');
+        alert(this.translate.instant('PROFILE.UPDATE_PASSWORD_ERROR'));
         console.error(err);
         this.passwordForm.controls['currentPassword'].setErrors({ invalid: true });
       }
     });
   }
 
-  // --- NUEVO MÉTODO ---
   deleteAccount(): void {
     if (!this.currentUser) return;
 
-    const confirmation = prompt('Esta acción es permanente. Para confirmar, escribe tu email:');
+    const confirmation = prompt(this.translate.instant('PROFILE.DELETE_ACCOUNT_CONFIRM'));
     if (confirmation === this.currentUser.email) {
       this.authService.deleteAccount(this.currentUser.id).subscribe({
         next: () => {
-          alert('Tu cuenta ha sido eliminada.');
-          // El servicio se encargará de redirigir al login
+          alert(this.translate.instant('PROFILE.DELETE_ACCOUNT_SUCCESS'));
         },
-        error: () => alert('Hubo un error al eliminar tu cuenta. El endpoint no está implementado en el backend.')
+        error: () => alert(this.translate.instant('PROFILE.DELETE_ACCOUNT_ERROR'))
       });
     } else if (confirmation !== null) {
-      alert('El email no coincide. La operación ha sido cancelada.');
+      alert(this.translate.instant('PROFILE.DELETE_ACCOUNT_EMAIL_MISMATCH'));
     }
   }
 
-  // Mapea el rol técnico a una clave legible para traducción
   getReadableRoleKey(role?: string | null): 'ARRENDADOR' | 'ARRENDATARIO' {
     const value = (role || '').toUpperCase();
     if (value.includes('ARRENDADOR')) return 'ARRENDADOR';

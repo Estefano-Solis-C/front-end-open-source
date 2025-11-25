@@ -27,7 +27,7 @@
     </div>
     <div class="card-actions">
       <a [routerLink]="['/tracking', vehicle.id]" class="action-button monitor">{{ 'MY_VEHICLES.MONITOR' | translate }}</a>
-      <a href="#" class="action-button edit">{{ 'MY_VEHICLES.EDIT' | translate }}</a>
+      <a [routerLink]="['/edit-vehicle', vehicle.id]" class="action-button edit" aria-label="Edit vehicle">{{ 'MY_VEHICLES.EDIT' | translate }}</a>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
-export class Vehicle {
-  public ownerName?: string; // Propiedad para el nombre del arrendador
+class Vehicle {
+  public ownerName?: string;
 
   constructor(
     public id: number,
@@ -9,6 +9,8 @@ export class Vehicle {
     public pricePerDay: number,
     public status: 'available' | 'rented',
     public imageUrl: string,
-    public ownerId: number // Es importante tener el ownerId en el modelo
+    public ownerId: number
   ) {}
 }
+
+export default Vehicle

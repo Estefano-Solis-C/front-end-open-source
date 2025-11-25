@@ -22,7 +22,6 @@ export class BookingService implements IBookingRepository {
     private vehicleService: VehicleService
   ) {}
 
-  // Retrieves bookings for the authenticated renter
   getBookings(): Observable<Booking[]> {
     return this.http.get<BookingDto[]>(`${this.apiUrl}/my-bookings`).pipe(
       map(dtos => dtos.map(BookingAssembler.toModel))
@@ -36,7 +35,7 @@ export class BookingService implements IBookingRepository {
   }
 
   updateBooking(bookingId: number, bookingDto: Partial<BookingDto>): Observable<Booking> {
-    return this.http.patch<BookingDto>(`${this.apiUrl}/${bookingId}`, bookingDto).pipe(
+    return this.http.put<BookingDto>(`${this.apiUrl}/${bookingId}`, bookingDto).pipe(
       map(dto => BookingAssembler.toModel(dto))
     );
   }
@@ -63,21 +62,18 @@ export class BookingService implements IBookingRepository {
     return this.http.delete(`${this.apiUrl}/${bookingId}`);
   }
 
-  // DDD repository contract method alias
   getMyBookings(): Observable<Booking[]> {
     return this.http.get<BookingDto[]>(`${this.apiUrl}/my-bookings`).pipe(
       map(dtos => dtos.map(BookingAssembler.toModel))
     );
   }
 
-  // Creates a booking sending only vehicleId, startDate and endDate
   createBooking(payload: { vehicleId: number; startDate: string; endDate: string }): Observable<Booking> {
     return this.http.post<BookingDto>(this.apiUrl, payload).pipe(
       map(dto => BookingAssembler.toModel(dto))
     );
   }
 
-  // Owner requests endpoint
   getMyBookingRequests(): Observable<Booking[]> {
     return this.http.get<BookingDto[]>(`${this.apiUrl}/my-requests`).pipe(
       map(dtos => dtos.map(BookingAssembler.toModel))

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, forkJoin, map } from 'rxjs';
 import { Review } from '../models/review.model';
 import { ReviewDto } from '../models/review.dto';
 import { ReviewAssembler } from '../assemblers/review.assembler';
@@ -17,14 +16,21 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtiene las reseñas de un vehículo específico desde el backend real
   getReviewsByVehicleId(vehicleId: number): Observable<Review[]> {
-    return this.http.get<ReviewDto[]>(`${this.apiUrl}/vehicle/${vehicleId}`).pipe(
-      map(dtos => dtos.map(ReviewAssembler.toModel))
+    const reviews$ = this.http.get<ReviewDto[]>(`${this.apiUrl}/vehicle/${vehicleId}`);
+    const users$ = this.http.get<any[]>(this.usersApiUrl);
+
+    return forkJoin({ reviews: reviews$, users: users$ }).pipe(
+      map(({ reviews, users }) =>
+        reviews.map(reviewDto => {
+          const user = users.find(u => u.id === reviewDto.renterId);
+          reviewDto.userName = user ? user.name : 'Usuario Anónimo';
+          return ReviewAssembler.toModel(reviewDto);
+        })
+      )
     );
   }
 
-  // Publica una nueva reseña
   postReview(review: Review): Observable<Review> {
     const dto = ReviewAssembler.toDto(review);
     return this.http.post<ReviewDto>(this.apiUrl, dto).pipe(

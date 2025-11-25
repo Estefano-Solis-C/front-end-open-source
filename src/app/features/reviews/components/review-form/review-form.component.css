@@ -31,7 +31,7 @@ textarea {
   font-size: 1em;
   min-height: 120px;
   box-sizing: border-box;
-  resize: none; /* <-- La corrección clave */
+  resize: none;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 

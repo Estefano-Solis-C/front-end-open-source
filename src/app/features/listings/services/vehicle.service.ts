@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Vehicle } from '../models/vehicle.model';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
+import Vehicle from '../models/vehicle.model';
 import { VehicleDto } from '../models/vehicle.dto';
 import { VehicleAssembler } from '../assemblers/vehicle.assembler';
 import { environment } from '../../../../environments/environment';
@@ -17,14 +16,33 @@ export class VehicleService {
   constructor(private http: HttpClient) {}
 
   getVehicles(): Observable<Vehicle[]> {
-    return this.http.get<VehicleDto[]>(this.apiUrl).pipe(
-      map(dtos => dtos.map(VehicleAssembler.toModel))
+    const vehicles$ = this.http.get<VehicleDto[]>(this.apiUrl);
+    const users$ = this.http.get<any[]>(this.usersUrl);
+
+    return forkJoin({ vehicles: vehicles$, users: users$ }).pipe(
+      map(({ vehicles, users }) =>
+        vehicles.map(vehicleDto => {
+          const model = VehicleAssembler.toModel(vehicleDto);
+          const owner = users.find(u => u.id === model.ownerId);
+          model.ownerName = owner ? owner.name : 'Propietario Desconocido';
+          return model;
+        })
+      )
     );
   }
 
   getVehicle(id: number): Observable<Vehicle> {
     return this.http.get<VehicleDto>(`${this.apiUrl}/${id}`).pipe(
-      map(dto => VehicleAssembler.toModel(dto))
+      switchMap((vehicleDto: VehicleDto) =>
+        this.http.get<any[]>(this.usersUrl).pipe(
+          map(users => {
+            const vehicleModel = VehicleAssembler.toModel(vehicleDto);
+            const owner = users.find(u => u.id === vehicleModel.ownerId);
+            vehicleModel.ownerName = owner ? owner.name : 'Propietario Desconocido';
+            return vehicleModel;
+          })
+        )
+      )
     );
   }
 
@@ -49,10 +67,14 @@ export class VehicleService {
     );
   }
 
-  // Lists vehicles for the authenticated owner
   getMyVehicles(): Observable<Vehicle[]> {
     return this.http.get<VehicleDto[]>(`${this.apiUrl}/my-listings`).pipe(
       map(dtos => dtos.map(VehicleAssembler.toModel))
     );
+  }
+
+  /** Delete a vehicle by id */
+  deleteVehicle(vehicleId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${vehicleId}`);
   }
 }

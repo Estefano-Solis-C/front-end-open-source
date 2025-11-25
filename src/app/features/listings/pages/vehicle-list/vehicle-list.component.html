@@ -7,7 +7,7 @@
 </div>
 
 <div class="vehicle-grid" *ngIf="!isLoading && availableVehicles.length > 0">
-  <div class="card vehicle-card" *ngFor="let vehicle of availableVehicles">
+  <div class="card vehicle-card" *ngFor="let vehicle of availableVehicles" [ngClass]="vehicle.status">
     <a [routerLink]="['/vehicles', vehicle.id]" class="card-main-link">
       <div class="card-image-wrapper">
         <img [src]="vehicle.imageUrl" class="vehicle-image" alt="{{ vehicle.brand }}">

@@ -4,11 +4,11 @@
 
 .my-vehicles-header {
   display: block;
-  margin-bottom: 0; /* El H1 (.page-header) ya maneja margen + subrayado */
+  margin-bottom: 0;
 }
 
 .actions {
-  margin: 16px 0 20px; /* Espaciado consistente bajo el título */
+  margin: 16px 0 20px;
 }
 
 .publish-button {

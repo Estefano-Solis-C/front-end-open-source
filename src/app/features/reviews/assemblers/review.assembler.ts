@@ -6,7 +6,7 @@ export class ReviewAssembler {
     const model = new Review(
       dto.id,
       dto.vehicleId,
-      dto.userId,
+      dto.renterId,
       dto.rating,
       dto.comment
     );
@@ -19,11 +19,11 @@ export class ReviewAssembler {
     return {
       id: model.id,
       vehicleId: model.vehicleId,
-      userId: model.userId,
+      renterId: model.renterId,
       rating: model.rating,
       comment: model.comment,
       userName: model.userName,
-      date: model.date.toISOString() // Convertir la fecha a string
+      date: model.date.toISOString()
     };
   }
 }

@@ -66,6 +66,21 @@
   transform: none;
 }
 
+/* Delete button styles */
+.card-footer .delete-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  margin-left: 12px;
+  padding: 12px 18px;
+  font-size: 1em;
+  cursor: pointer;
+}
+.card-footer .delete-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .reviews-section {
   margin-top: 50px;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Vehicle } from '../../models/vehicle.model';
+import Vehicle from '../../models/vehicle.model';
 import { VehicleService } from '../../services/vehicle.service';
 import { map } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core'; // Importar
@@ -36,7 +36,7 @@ export class VehicleListComponent implements OnInit {
       })
     ).subscribe(vehiclesWithOwners => {
       this.vehicles = vehiclesWithOwners;
-      this.availableVehicles = vehiclesWithOwners.filter(v => (v.status || '').toLowerCase() === 'available');
+      this.availableVehicles = vehiclesWithOwners;
       this.isLoading = false;
     });
   }

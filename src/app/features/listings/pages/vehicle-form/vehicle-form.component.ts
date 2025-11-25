@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { VehicleService } from '../../services/vehicle.service';
 import { AuthService } from '../../../iam/services/auth.service';
-import { Vehicle } from '../../models/vehicle.model';
+import Vehicle from '../../models/vehicle.model';
 import { take } from 'rxjs';
 import { TranslateModule, TranslateService, TranslatePipe } from '@ngx-translate/core';
 
@@ -19,6 +19,7 @@ export class VehicleFormComponent implements OnInit {
   vehicleForm: FormGroup;
   isEditMode = false;
   currentOwnerId: number | null = null;
+  currentVehicleId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -39,12 +40,30 @@ export class VehicleFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.currentUser$.pipe(take(1)).subscribe(user => {
-      if (user) this.currentOwnerId = user.id;
+      if (user) {
+        this.currentOwnerId = user.id;
+      }
     });
 
-    // Lógica para modo edición (a implementar en el futuro si se necesita)
-    // const id = this.route.snapshot.paramMap.get('id');
-    // if (id) { ... }
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      // EDIT MODE
+      this.isEditMode = true;
+      this.currentVehicleId = Number(idParam);
+
+      this.vehicleService.getVehicle(this.currentVehicleId).subscribe(vehicle => {
+        // Ensure current user owns the vehicle
+        if (vehicle.ownerId === this.currentOwnerId) {
+          this.vehicleForm.patchValue(vehicle);
+        } else {
+          alert('No tienes permiso para editar este vehículo.');
+          this.router.navigate(['/my-vehicles']);
+        }
+      });
+    } else {
+      // CREATE MODE
+      this.isEditMode = false;
+    }
   }
 
   onSubmit() {
@@ -52,20 +71,58 @@ export class VehicleFormComponent implements OnInit {
 
     const formValue = this.vehicleForm.value;
 
-    const vehicleData = new Vehicle(
-      Date.now(), // ID temporal
-      formValue.brand,
-      formValue.model,
-      formValue.year,
-      formValue.pricePerDay,
-      'available',
-      formValue.imageUrl,
-      this.currentOwnerId
-    );
+    if (this.isEditMode && this.currentVehicleId) {
+      // UPDATE LOGIC
+      const vehicleData = new Vehicle(
+        this.currentVehicleId,
+        formValue.brand,
+        formValue.model,
+        formValue.year,
+        formValue.pricePerDay,
+        'available',
+        formValue.imageUrl,
+        this.currentOwnerId
+      );
 
-    this.vehicleService.createVehicle(vehicleData).subscribe(() => {
-      alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
-      this.router.navigate(['/my-vehicles']);
+      this.vehicleService.updateVehicle(vehicleData).subscribe(() => {
+        alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
+        this.router.navigate(['/my-vehicles']);
+      });
+    } else {
+      // CREATE LOGIC
+      const vehicleData = new Vehicle(
+        Date.now(),
+        formValue.brand,
+        formValue.model,
+        formValue.year,
+        formValue.pricePerDay,
+        'available',
+        formValue.imageUrl,
+        this.currentOwnerId
+      );
+
+      this.vehicleService.createVehicle(vehicleData).subscribe(() => {
+        alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
+        this.router.navigate(['/my-vehicles']);
+      });
+    }
+  }
+
+  onDelete() {
+    if (!this.currentVehicleId) return;
+
+    const confirmed = confirm('¿Estás seguro de que deseas eliminar este vehículo y todos sus datos asociados? Esta acción no se puede deshacer.');
+    if (!confirmed) return;
+
+    this.vehicleService.deleteVehicle(this.currentVehicleId).subscribe({
+      next: () => {
+        alert(this.translate.instant('VEHICLE.DELETE_SUCCESS') || 'Vehículo eliminado correctamente.');
+        this.router.navigate(['/my-vehicles']);
+      },
+      error: (err) => {
+        console.error('Error deleting vehicle', err);
+        alert(this.translate.instant('VEHICLE.DELETE_ERROR') || 'Error al eliminar el vehículo. Intenta nuevamente.');
+      }
     });
   }
 }

@@ -20,7 +20,17 @@
     "BUTTON": "Sign In",
     "REGISTER_LINK": "Don't have an account? Register",
     "NO_ACCOUNT": "Don't have an account?",
-    "REGISTER": "Register"
+    "REGISTER": "Register",
+    "INVALID_CREDENTIALS": "Invalid credentials",
+    "REGISTER_SUCCESS": "Account created successfully! You can now log in.",
+    "REGISTER_ERROR": "There was an error creating the account. Please try again."
+  },
+  "REGISTER": {
+    "TITLE": "Create Account",
+    "ROLE_PROMPT": "I want to register as:",
+    "ROLE_RENTER_OPTION": "Renter (to book)",
+    "ROLE_OWNER_OPTION": "Lessor (to publish)",
+    "SWITCH_TO_LOGIN": "Already have an account? Log In"
   },
   "MY_BOOKINGS": {
     "TITLE": "My Bookings",
@@ -51,7 +61,10 @@
     "OWNER": "Owner",
     "STATUS_AVAILABLE": "Available",
     "STATUS_RENTED": "Rented",
-    "UNKNOWN_OWNER": "Unknown Owner"
+    "UNKNOWN_OWNER": "Unknown Owner",
+    "DELETE": "Delete Vehicle",
+    "DELETE_SUCCESS": "Vehicle deleted successfully.",
+    "DELETE_ERROR": "Error deleting vehicle. Please try again."
   },
   "VEHICLE_LIST": {
     "TITLE": "Available Vehicles",
@@ -74,7 +87,13 @@
     "RENEW_BOOKING": "Renew Booking",
     "DELETE_BOOKING": "Delete Booking",
     "INACTIVE_BOOKING": "This booking is no longer active.",
-    "REVIEW_PROMPT": "You can leave a review once your rental is finished or cancelled."
+    "REVIEW_PROMPT": "You can leave a review once your rental is finished or cancelled.",
+    "CONFIRM_CANCEL": "Are you sure you want to cancel this booking?",
+    "CANCEL_SUCCESS": "Booking successfully canceled. You can now leave a review if you wish.",
+    "CANCEL_ERROR": "The booking could not be canceled. Please try again.",
+    "CONFIRM_DELETE": "Are you sure you want to permanently delete this booking from history?",
+    "DELETE_SUCCESS": "The booking has been deleted.",
+    "DELETE_ERROR": "The booking could not be deleted."
   },
   "PROFILE": {
     "TITLE": "My Profile",
@@ -89,7 +108,17 @@
     "UPDATE_PASSWORD": "Update Password",
     "DANGER_ZONE": "Danger Zone",
     "DELETE_ACCOUNT": "Delete Account",
-    "DELETE_ACCOUNT_WARNING": "This action is permanent and cannot be undone."
+    "DELETE_ACCOUNT_WARNING": "This action is permanent and cannot be undone.",
+    "UPDATE_INFO_SUCCESS": "Information updated successfully. Please log in again.",
+    "UPDATE_INFO_ERROR": "There was an error updating your information.",
+    "VALIDATION_REQUIRED": "Please complete all fields.",
+    "PASSWORD_MISMATCH": "The new password and its confirmation do not match.",
+    "UPDATE_PASSWORD_SUCCESS": "Password changed successfully. Please log in again.",
+    "UPDATE_PASSWORD_ERROR": "The current password is incorrect or there was an error changing it.",
+    "DELETE_ACCOUNT_CONFIRM": "This action is permanent. To confirm, type your email:",
+    "DELETE_ACCOUNT_SUCCESS": "Your account has been deleted.",
+    "DELETE_ACCOUNT_ERROR": "There was an error deleting your account.",
+    "DELETE_ACCOUNT_EMAIL_MISMATCH": "Email does not match. Operation canceled."
   },
   "ROLES": {
     "ARRENDADOR": "Lessor",
@@ -126,7 +155,10 @@
     "TOTAL_TO_PAY": "Total to Pay",
     "DAYS_COUNT": "{{days}} day(s)",
     "BUTTON_CREATE": "Confirm and Pay",
-    "BUTTON_RENEW": "Update Booking"
+    "BUTTON_RENEW": "Update Booking",
+    "RENEW_SUCCESS": "Booking updated successfully!",
+    "CONFIRM_SUCCESS": "Booking confirmed successfully!",
+    "LOGIN_REQUIRED": "You must log in to book."
   },
   "MY_VEHICLES": {
     "TITLE": "My Published Vehicles",
@@ -155,6 +187,16 @@
     "DATE_RANGE": "{{start}} to {{end}}",
     "INCOME": "Income",
     "ACCEPT": "Accept",
-    "REJECT": "Reject"
+    "REJECT": "Reject",
+    "CONFIRM_ERROR": "The booking could not be confirmed.",
+    "REJECT_ERROR": "The booking could not be rejected."
+  },
+  "STATUS": {
+    "PENDING": "Pending",
+    "CONFIRMED": "Confirmed",
+    "REJECTED": "Rejected",
+    "CANCELED": "Canceled",
+    "RESERVADO": "Reserved",
+    "YA_RESERVADO": "Already Booked"
   }
 }

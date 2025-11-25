@@ -35,17 +35,11 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateMetrics(bookings: any[]) {
-    // Calcular Ingresos Totales (usa totalPrice)
     this.totalIncome = bookings.reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
-
-    // Calcular Alquileres Activos (ajusta 'active' al valor exacto de tu backend si es distinto)
     this.activeRentals = bookings.filter(b => b.status === 'active').length;
-
-    // Contar vehículos únicos (si viene `vehicle` en el payload)
     const uniqueVehicles = new Set(bookings.map(b => b.vehicle?.id).filter((v: number | undefined) => v != null));
     this.totalVehicles = uniqueVehicles.size;
 
-    // Lógica simple para Top Vehículos (por número de reservas)
     const vehicleCounts: Record<number, number> = bookings.reduce((acc: Record<number, number>, booking: any) => {
       const vid = booking.vehicle?.id;
       if (vid != null) acc[vid] = (acc[vid] || 0) + 1;

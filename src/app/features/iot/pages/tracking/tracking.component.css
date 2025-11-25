@@ -13,10 +13,3 @@
 }
 .car-marker { font-size: 40px; }
 .info-card { background-color: white; padding: 20px; border-radius: 8px; }
-.status {
-  padding: 4px 8px;
-  border-radius: 12px;
-  color: white;
-}
-.status.Estacionado { background-color: #ffc107; color: black; }
-.status.En-movimiento { background-color: #28a745; }

@@ -14,7 +14,6 @@
   border-bottom: 1px solid #eee;
 }
 
-/* Estilos de la tarjeta de resumen */
 .vehicle-summary {
   padding: 20px;
 }
@@ -41,8 +40,6 @@
   font-size: 0.8em;
 }
 
-
-/* Estilos de la tarjeta de formulario */
 .booking-form {
   padding: 30px 35px;
 }
@@ -103,7 +100,6 @@
   transform: none;
 }
 
-/* Responsive */
 @media (max-width: 992px) {
   .booking-process-container {
     grid-template-columns: 1fr;

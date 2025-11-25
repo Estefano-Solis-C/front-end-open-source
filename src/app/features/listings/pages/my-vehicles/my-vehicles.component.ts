@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Vehicle } from '../../models/vehicle.model';
+import Vehicle from '../../models/vehicle.model';
 import { VehicleService } from '../../services/vehicle.service';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 

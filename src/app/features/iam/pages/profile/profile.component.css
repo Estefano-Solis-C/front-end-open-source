@@ -45,16 +45,12 @@
   box-shadow: 0 4px 15px rgba(0, 63, 112, 0.2);
 }
 
-/* --- INICIO DE LA NUEVA LÓGICA DE GRID --- */
-
 .profile-grid {
   display: grid;
   gap: 30px;
-  /* Por defecto (móvil), es una sola columna */
   grid-template-columns: 1fr;
 }
 
-/* En pantallas más grandes, cambiamos a 2 columnas */
 @media (min-width: 992px) {
   .profile-grid {
     grid-template-columns: 1fr 1fr;
@@ -78,10 +74,6 @@
   font-weight: 600;
 }
 
-/* --- FIN DE LA NUEVA LÓGICA DE GRID --- */
-
-
-/* --- ESTILOS PARA MODO VISTA --- */
 .info-item {
   margin-bottom: 25px;
 }
@@ -116,7 +108,6 @@
   color: #007bff;
 }
 
-/* --- ESTILOS PARA FORMULARIOS --- */
 .form-group {
   margin-bottom: 20px;
 }
@@ -181,14 +172,12 @@
   box-shadow: none;
 }
 
-/* --- REDISEÑO DE ZONA DE PELIGRO --- */
 .danger-zone {
   background: #fffafa;
   border-left: 4px solid #dc3545;
 }
 @media (min-width: 992px) {
   .danger-zone {
-    /* En pantallas grandes, hacemos que ocupe las 2 columnas */
     grid-column: 1 / -1;
   }
 }
@@ -220,8 +209,6 @@
 .delete-button:hover {
   background-color: #c82333;
 }
-
-/* Ajuste final para móvil */
 @media (max-width: 768px) {
   .danger-option {
     flex-direction: column;

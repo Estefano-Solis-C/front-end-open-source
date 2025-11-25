@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { forkJoin, map, Observable } from 'rxjs';
-import { Vehicle } from '../../../listings/models/vehicle.model';
+import Vehicle from '../../../listings/models/vehicle.model';
 import { Booking } from '../../../booking/models/booking.model';
 import { VehicleService } from '../../../listings/services/vehicle.service';
 import { AuthService } from '../../services/auth.service';
@@ -19,10 +19,7 @@ import { GetMyBookingsUseCase } from '../../../booking/application/use-cases/get
 export class DashboardArrendatarioComponent implements OnInit {
   isLoading = true;
   previewVehicles: Vehicle[] = [];
-  // Active bookings shown in the dashboard
   activeBookings: { booking: Booking, vehicle: Vehicle }[] = [];
-
-  // Filtered observables for the dashboard
   availableVehicles$!: Observable<Vehicle[]>;
   activeBookings$!: Observable<{ booking: Booking, vehicle: Vehicle }[]>;
 
@@ -38,18 +35,16 @@ export class DashboardArrendatarioComponent implements OnInit {
       this.isLoading = false;
       return;
     }
-    // Only load renter-specific data for renters
+
     if (currentUser.role !== 'ROLE_ARRENDATARIO') {
       this.isLoading = false;
       return;
     }
 
-    // 1) availableVehicles$: only vehicles with status 'available'
     this.availableVehicles$ = this.vehicleService.getVehicles().pipe(
       map(vehicles => vehicles.filter(vehicle => vehicle.status === 'available'))
     );
 
-    // 2) activeBookings$: bookings with status PENDING/CONFIRMED joined with their vehicles
     this.activeBookings$ = forkJoin({
       vehicles: this.vehicleService.getVehicles(),
       bookings: this.getMyBookings.execute()
@@ -68,7 +63,6 @@ export class DashboardArrendatarioComponent implements OnInit {
       })
     );
 
-    // Additional preview logic (kept): builds a small preview list
     forkJoin({
       vehicles: this.vehicleService.getVehicles(),
       bookings: this.getMyBookings.execute()

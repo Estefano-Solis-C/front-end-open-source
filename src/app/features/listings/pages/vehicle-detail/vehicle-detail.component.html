@@ -1,12 +1,12 @@
 <div *ngIf="!vehicle" class="loading-message">{{ 'MY_BOOKINGS.LOADING' | translate }}</div>
 
-<div class="detail-container" *ngIf="vehicle">
+<div class="detail-container" *ngIf="vehicle" [ngClass]="vehicle.status">
   <a routerLink="/vehicles" class="back-link">‹ {{ 'VEHICLE_LIST.TITLE' | translate }}</a>
   <h1 class="page-header">{{ vehicle.brand }} {{ vehicle.model }}</h1>
 
   <div class="detail-grid">
     <div class="image-gallery">
-      <img [src]="vehicle.imageUrl" alt="Imagen de {{ vehicle.brand }} {{ vehicle.model }}">
+      <img [src]="vehicle.imageUrl" alt="Imagen de {{ vehicle.brand }} {{ vehicle.model }}" [class.rented-image]="vehicle.status === 'rented'">
     </div>
 
     <div class="card info-card">
@@ -29,8 +29,25 @@
         </div>
       </div>
       <div class="card-footer">
-        <button class="action-button primary" [routerLink]="['/booking', vehicle.id]" [disabled]="vehicle.status === 'rented'">
-          {{ 'VEHICLE_DETAIL.RENT_NOW' | translate }}
+        <button class="action-button primary"
+                [routerLink]="['/booking', vehicle.id]"
+                [disabled]="vehicle.status === 'rented' || hasActiveBooking || isOwner || isLoadingData">
+
+          <span *ngIf="hasActiveBooking">{{ 'STATUS.YA_RESERVADO' | translate }}</span>
+
+          <span *ngIf="!hasActiveBooking && (vehicle.status === 'rented' || isOwner)">
+            {{ 'STATUS.RESERVADO' | translate }}
+          </span>
+
+          <span *ngIf="!hasActiveBooking && vehicle.status === 'available' && !isOwner">
+            {{ 'VEHICLE_DETAIL.RENT_NOW' | translate }}
+          </span>
+
+        </button>
+
+        <!-- Delete button for vehicle owner -->
+        <button *ngIf="isOwner" class="action-button delete-button" (click)="onDelete()" [disabled]="isLoadingData">
+          {{ 'VEHICLE.DELETE' | translate }}
         </button>
       </div>
     </div>

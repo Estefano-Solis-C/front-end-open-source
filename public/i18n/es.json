@@ -61,7 +61,10 @@
     "OWNER": "Propietario",
     "STATUS_AVAILABLE": "Disponible",
     "STATUS_RENTED": "Alquilado",
-    "UNKNOWN_OWNER": "Propietario Desconocido"
+    "UNKNOWN_OWNER": "Propietario Desconocido",
+    "DELETE": "Eliminar Vehículo",
+    "DELETE_SUCCESS": "Vehículo eliminado correctamente.",
+    "DELETE_ERROR": "Error al eliminar el vehículo. Intenta nuevamente."
   },
   "VEHICLE_LIST": {
     "TITLE": "Vehículos Disponibles",
@@ -90,10 +93,7 @@
     "CANCEL_ERROR": "No se pudo cancelar la reserva. Inténtalo de nuevo.",
     "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar permanentemente esta reserva del historial?",
     "DELETE_SUCCESS": "La reserva ha sido eliminada.",
-    "DELETE_ERROR": "No se pudo eliminar la reserva.",
-    "STATUS_ACTIVE": "Activa",
-    "STATUS_CANCELLED": "Cancelada",
-    "STATUS_FINISHED": "Finalizada"
+    "DELETE_ERROR": "No se pudo eliminar la reserva."
   },
   "PROFILE": {
     "TITLE": "Mi Perfil",
@@ -109,11 +109,11 @@
     "DANGER_ZONE": "Zona de Peligro",
     "DELETE_ACCOUNT": "Eliminar Cuenta",
     "DELETE_ACCOUNT_WARNING": "Esta acción es permanente y no se puede deshacer.",
-    "UPDATE_INFO_SUCCESS": "Información actualizada con éxito.",
+    "UPDATE_INFO_SUCCESS": "Información actualizada con éxito. Por favor, inicia sesión de nuevo.",
     "UPDATE_INFO_ERROR": "Hubo un error al actualizar tus datos.",
     "VALIDATION_REQUIRED": "Por favor, completa todos los campos.",
     "PASSWORD_MISMATCH": "La nueva contraseña y su confirmación no coinciden.",
-    "UPDATE_PASSWORD_SUCCESS": "Contraseña cambiada con éxito.",
+    "UPDATE_PASSWORD_SUCCESS": "Contraseña cambiada con éxito. Por favor, inicia sesión de nuevo.",
     "UPDATE_PASSWORD_ERROR": "La contraseña actual es incorrecta o hubo un error al cambiarla.",
     "DELETE_ACCOUNT_CONFIRM": "Esta acción es permanente. Para confirmar, escribe tu email:",
     "DELETE_ACCOUNT_SUCCESS": "Tu cuenta ha sido eliminada.",
@@ -155,7 +155,10 @@
     "TOTAL_TO_PAY": "Total a Pagar",
     "DAYS_COUNT": "{{days}} día(s)",
     "BUTTON_CREATE": "Confirmar y Pagar",
-    "BUTTON_RENEW": "Actualizar Reserva"
+    "BUTTON_RENEW": "Actualizar Reserva",
+    "RENEW_SUCCESS": "¡Reserva actualizada con éxito!",
+    "CONFIRM_SUCCESS": "¡Reserva confirmada con éxito!",
+    "LOGIN_REQUIRED": "Debes iniciar sesión para reservar."
   },
   "MY_VEHICLES": {
     "TITLE": "Mis Vehículos Publicados",
@@ -184,6 +187,16 @@
     "DATE_RANGE": "{{start}} al {{end}}",
     "INCOME": "Ingreso",
     "ACCEPT": "Aceptar",
-    "REJECT": "Rechazar"
+    "REJECT": "Rechazar",
+    "CONFIRM_ERROR": "No se pudo confirmar la reserva.",
+    "REJECT_ERROR": "No se pudo rechazar la reserva."
+  },
+  "STATUS": {
+    "PENDING": "Pendiente",
+    "CONFIRMED": "Confirmada",
+    "REJECTED": "Rechazada",
+    "CANCELED": "Cancelada",
+    "RESERVADO": "Reservado",
+    "YA_RESERVADO": "Ya Reservado"
   }
 }

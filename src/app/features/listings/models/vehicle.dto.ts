@@ -6,6 +6,7 @@ export class VehicleDto {
     public year: number,
     public pricePerDay: number,
     public status: 'available' | 'rented',
-    public imageUrl: string
+    public imageUrl: string,
+    public ownerId: number
   ) {}
 }

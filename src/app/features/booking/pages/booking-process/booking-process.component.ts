@@ -2,13 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Vehicle } from '../../../listings/models/vehicle.model';
+import Vehicle from '../../../listings/models/vehicle.model';
 import { VehicleService } from '../../../listings/services/vehicle.service';
 import { BookingService } from '../../services/booking.service';
 import { AuthService } from '../../../iam/services/auth.service';
 import { take } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+/**
+ * BookingProcess component handles creating or renewing a booking.
+ * When bookingId is present it enters renewal (edit) mode.
+ */
 @Component({
   selector: 'app-booking-process',
   standalone: true,
@@ -21,7 +25,7 @@ export class BookingProcessComponent implements OnInit {
   bookingForm: FormGroup;
   totalPrice = 0;
   totalDays = 0;
-  isEditMode = false; // Estado para saber si estamos creando o renovando
+  isEditMode = false;
   private bookingIdToEdit: number | null = null;
 
   constructor(
@@ -30,7 +34,8 @@ export class BookingProcessComponent implements OnInit {
     private fb: FormBuilder,
     private vehicleService: VehicleService,
     private bookingService: BookingService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {
     this.bookingForm = this.fb.group({
       startDate: ['', Validators.required],
@@ -38,6 +43,7 @@ export class BookingProcessComponent implements OnInit {
     });
   }
 
+  /** Initialize component, load vehicle and optionally existing booking */
   ngOnInit(): void {
     const vehicleId = Number(this.route.snapshot.paramMap.get('vehicleId'));
     this.bookingIdToEdit = Number(this.route.snapshot.queryParamMap.get('bookingId'));
@@ -46,7 +52,6 @@ export class BookingProcessComponent implements OnInit {
       this.vehicle = vehicle;
     });
 
-    // Si la URL contiene un 'bookingId', entramos en modo "renovar"
     if (this.bookingIdToEdit) {
       this.isEditMode = true;
       this.bookingService.getBookingById(this.bookingIdToEdit).subscribe(booking => {
@@ -54,15 +59,14 @@ export class BookingProcessComponent implements OnInit {
           startDate: formatDate(booking.startDate, 'yyyy-MM-dd', 'en-US'),
           endDate: formatDate(booking.endDate, 'yyyy-MM-dd', 'en-US')
         });
-        // En modo renovación, no se puede cambiar la fecha de inicio
         this.bookingForm.get('startDate')?.disable();
         this.calculateTotal();
       });
     }
   }
 
+  /** Recalculate total days and price based on selected dates */
   calculateTotal() {
-    // Usamos .getRawValue() para leer también los campos deshabilitados como startDate
     const startDate = new Date(this.bookingForm.getRawValue().startDate);
     const endDate = new Date(this.bookingForm.value.endDate);
     if (this.vehicle && startDate && endDate && endDate > startDate) {
@@ -75,35 +79,33 @@ export class BookingProcessComponent implements OnInit {
     }
   }
 
+  /** Submit create or renew operation based on current mode */
   onSubmit() {
     if (this.bookingForm.invalid || !this.vehicle) return;
 
     if (this.isEditMode && this.bookingIdToEdit) {
-      // --- LÓGICA PARA ACTUALIZAR (RENOVAR) ---
       const bookingUpdate = {
         endDate: this.bookingForm.value.endDate,
         totalPrice: this.totalPrice,
       };
       this.bookingService.updateBooking(this.bookingIdToEdit, bookingUpdate).subscribe(() => {
-        alert("¡Reserva actualizada con éxito!");
+        alert(this.translate.instant('BOOKING_PROCESS.RENEW_SUCCESS'));
         this.router.navigate(['/my-bookings']);
       });
     } else {
-      // --- LÓGICA PARA CREAR (NUEVA RESERVA) ---
       this.authService.currentUser$.pipe(take(1)).subscribe(user => {
         if (!user) {
-          alert("Debes iniciar sesión para reservar.");
+          alert(this.translate.instant('BOOKING_PROCESS.LOGIN_REQUIRED'));
           this.router.navigate(['/login']);
           return;
         }
-        // DTO mínimo para el backend: CreateBookingResource
         const newBooking = {
           vehicleId: this.vehicle!.id,
           startDate: this.bookingForm.value.startDate,
           endDate: this.bookingForm.value.endDate
         };
         this.bookingService.createBooking(newBooking).subscribe(() => {
-          alert("¡Reserva confirmada con éxito!");
+          alert(this.translate.instant('BOOKING_PROCESS.CONFIRM_SUCCESS'));
           this.router.navigate(['/my-bookings']);
         });
       });

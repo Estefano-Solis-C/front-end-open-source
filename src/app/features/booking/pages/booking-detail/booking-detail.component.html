@@ -30,16 +30,23 @@
         </div>
         <div class="info-item status-item">
           <strong>{{ 'BOOKING_DETAIL.STATUS' | translate }}:</strong>
-          <p class="status" [ngClass]="booking.status">{{ booking.status }}</p>
+          <p class="status" [ngClass]="booking.status">{{ ('STATUS.' + booking.status) | translate }}</p>
         </div>
       </div>
 
       <div class="card-footer">
-        <div class="booking-actions" *ngIf="booking.status === 'activa'">
-          <button (click)="cancelBooking()" class="action-button cancel-button">{{ 'BOOKING_DETAIL.CANCEL_BOOKING' | translate }}</button>
-          <button (click)="renewBooking()" class="action-button renew-button">{{ 'BOOKING_DETAIL.RENEW_BOOKING' | translate }}</button>
+        <div class="booking-actions">
+          <button (click)="cancelBooking()" class="action-button cancel-button"
+                  *ngIf="(booking.status === 'PENDING' || booking.status === 'CONFIRMED') && daysRemaining > 0">
+            {{ 'BOOKING_DETAIL.CANCEL_BOOKING' | translate }}
+          </button>
+
+          <button (click)="renewBooking()" class="action-button renew-button"
+                  *ngIf="booking.status === 'PENDING' || (booking.status === 'CONFIRMED' && daysRemaining <= 3 && daysRemaining > 0)">
+            {{ 'BOOKING_DETAIL.RENEW_BOOKING' | translate }}
+          </button>
         </div>
-        <div class="booking-actions" *ngIf="booking.status === 'cancelada'">
+        <div class="booking-actions" *ngIf="booking.status === 'CANCELED' || booking.status === 'REJECTED'">
           <button (click)="deleteBooking()" class="action-button delete-button">{{ 'BOOKING_DETAIL.DELETE_BOOKING' | translate }}</button>
         </div>
       </div>
@@ -48,9 +55,9 @@
 
   <div class="reviews-section">
     <app-review-list [vehicleId]="vehicle.id"></app-review-list>
-    <div *ngIf="booking.status === 'activa'" class="review-prompt">{{ 'BOOKING_DETAIL.REVIEW_PROMPT' | translate }}</div>
+    <div *ngIf="booking.status === 'PENDING' || (booking.status === 'CONFIRMED' && daysRemaining > 0)" class="review-prompt">{{ 'BOOKING_DETAIL.REVIEW_PROMPT' | translate }}</div>
     <app-review-form
-      *ngIf="booking.status === 'finalizada' || booking.status === 'cancelada'"
+      *ngIf="booking.status === 'CANCELED' || booking.status === 'REJECTED' || (booking.status === 'CONFIRMED' && daysRemaining === 0)"
       [vehicleId]="vehicle.id"
       (reviewPosted)="onReviewPosted()">
     </app-review-form>

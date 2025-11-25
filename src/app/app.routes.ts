@@ -34,6 +34,7 @@ export const routes: Routes = [
       { path: 'my-bookings/:id', component: BookingDetailComponent, canActivate: [roleGuard], data: { roles: ['ROLE_ARRENDATARIO'] } },
       { path: 'my-vehicles', component: MyVehiclesComponent, canActivate: [roleGuard], data: { roles: ['ROLE_ARRENDADOR'] } },
       { path: 'publish-vehicle', component: VehicleFormComponent, canActivate: [roleGuard], data: { roles: ['ROLE_ARRENDADOR'] } },
+      { path: 'edit-vehicle/:id', component: VehicleFormComponent, canActivate: [roleGuard], data: { roles: ['ROLE_ARRENDADOR'] } },
       { path: 'booking-requests', component: BookingRequestsComponent, canActivate: [roleGuard], data: { roles: ['ROLE_ARRENDADOR'] } },
       { path: 'profile', component: ProfileComponent },
       { path: 'tracking/:id', component: TrackingComponent },

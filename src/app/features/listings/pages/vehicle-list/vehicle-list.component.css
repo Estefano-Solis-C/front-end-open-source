@@ -30,6 +30,18 @@
   transform: scale(1.05);
 }
 
+.vehicle-card.rented .vehicle-image {
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+.vehicle-card.rented .overlay {
+  display: none;
+}
+
+.status-badge.rented {
+  background-color: #6c757d;
+}
+
 .status-badge {
   position: absolute;
   top: 12px;
@@ -43,7 +55,6 @@
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
-.status-badge.rented { background-color: #dc3545; }
 .status-badge.available { background-color: #28a745; }
 
 .card-content {
@@ -59,8 +70,8 @@
 }
 
 .vehicle-year {
-  color: #999;
-  font-size: 0.9em;
+  color: #555;
+  font-size: 1.1em;
   margin-bottom: 10px;
 }
 

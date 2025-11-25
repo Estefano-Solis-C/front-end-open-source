@@ -37,13 +37,6 @@ export class ReviewListComponent implements OnInit {
     this.isLoading = true;
     this.reviewService.getReviewsByVehicleId(this.vehicleId).pipe(
       map(reviews => {
-        // Ensure username is present
-        reviews.forEach(r => {
-          if (!r.userName || r.userName.trim() === '') {
-            r.userName = 'Anonymous User';
-          }
-        });
-        // Newest review first
         return reviews.sort((a, b) => b.id - a.id);
       })
     ).subscribe(reviewsWithNames => {

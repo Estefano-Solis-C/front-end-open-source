@@ -5,11 +5,16 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { take } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+/**
+ * EditProfile component allows editing user basic info and password.
+ * Simplified variant of Profile component without logout flow.
+ */
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
@@ -21,16 +26,14 @@ export class EditProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
-    // Formulario para la información personal
     this.infoForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]]
-      // Puedes añadir más campos como teléfono, etc. si los tienes en tu modelo User
     });
 
-    // Formulario para cambiar la contraseña
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -38,11 +41,11 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  /** Initialize form values with current user */
   ngOnInit(): void {
     this.authService.currentUser$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.currentUser = user;
-        // Rellenamos el formulario con los datos actuales del usuario
         this.infoForm.patchValue({
           name: user.name,
           email: user.email
@@ -51,13 +54,13 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  /** Persist updated user information */
   onUpdateInformation(): void {
     if (this.infoForm.invalid || !this.currentUser) {
-      alert('Por favor, completa los campos correctamente.');
+      alert(this.translate.instant('PROFILE.VALIDATION_REQUIRED'));
       return;
     }
 
-    // Creamos el objeto de usuario actualizado
     const updatedUser: User = {
       ...this.currentUser,
       name: this.infoForm.value.name,
@@ -66,33 +69,32 @@ export class EditProfileComponent implements OnInit {
 
     this.authService.updateUser(updatedUser).subscribe({
       next: () => {
-        alert('Información actualizada con éxito.');
+        alert(this.translate.instant('PROFILE.UPDATE_INFO_SUCCESS'));
         this.router.navigate(['/profile']);
       },
       error: (err) => {
         console.error('Error al actualizar la información:', err);
-        alert('Hubo un error al actualizar tus datos.');
+        alert(this.translate.instant('PROFILE.UPDATE_INFO_ERROR'));
       }
     });
   }
 
+  /** Simulate password change (demo with json-server) */
   onChangePassword(): void {
     if (this.passwordForm.invalid) {
-      alert('Por favor, completa todos los campos de contraseña.');
+      alert(this.translate.instant('PROFILE.VALIDATION_REQUIRED'));
       return;
     }
 
-    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
+    const { newPassword, confirmPassword } = this.passwordForm.value;
 
     if (newPassword !== confirmPassword) {
-      alert('La nueva contraseña y su confirmación no coinciden.');
+      alert(this.translate.instant('PROFILE.PASSWORD_MISMATCH'));
       return;
     }
 
-    // Aquí iría la lógica para verificar la contraseña actual y cambiarla.
-    // Como estamos usando json-server, simularemos que la operación fue exitosa.
     console.log('Cambiando contraseña...');
-    alert('Contraseña cambiada con éxito (simulación).');
+    alert(this.translate.instant('PROFILE.UPDATE_PASSWORD_SUCCESS'));
     this.passwordForm.reset();
   }
 }

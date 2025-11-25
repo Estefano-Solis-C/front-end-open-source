@@ -21,8 +21,13 @@
       <label for="imageUrl">{{ 'VEHICLE_FORM.IMAGE_URL' | translate }}</label>
       <input type="text" id="imageUrl" formControlName="imageUrl">
     </div>
-    <button type="submit" class="submit-button" [disabled]="vehicleForm.invalid">
-      {{ isEditMode ? ('COMMON.SAVE_CHANGES' | translate) : ('VEHICLE_FORM.PUBLISH_VEHICLE' | translate) }}
-    </button>
+    <div class="button-container">
+      <button type="submit" class="submit-button" [disabled]="vehicleForm.invalid">
+        {{ isEditMode ? ('COMMON.SAVE_CHANGES' | translate) : ('VEHICLE_FORM.PUBLISH_VEHICLE' | translate) }}
+      </button>
+      <button *ngIf="isEditMode" type="button" class="delete-button" (click)="onDelete()">
+        {{ 'VEHICLE.DELETE' | translate }}
+      </button>
+    </div>
   </form>
 </div>

@@ -1,4 +1,7 @@
-h1 { color: var(--primary-color); }
+h1
+{
+  color: var(--primary-color);
+}
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -32,9 +35,18 @@ h1 { color: var(--primary-color); }
   font-size: 2em;
   margin-bottom: 10px;
 }
-.income { background-color: #e7f5e8; }
-.active-rentals { background-color: #e6f3ff; }
-.total-vehicles { background-color: #fff4e6; }
+.income
+{
+  background-color: #e7f5e8;
+}
+.active-rentals
+{
+  background-color: #e6f3ff;
+}
+.total-vehicles
+{
+  background-color: #fff4e6;
+}
 
 .top-vehicles-section {
   margin-top: 40px;
@@ -42,7 +54,10 @@ h1 { color: var(--primary-color); }
   padding: 25px;
   border-radius: 10px;
 }
-.top-vehicles-section h2 { margin-top: 0; }
+.top-vehicles-section h2
+{
+  margin-top: 0;
+}
 .vehicle-item {
   display: flex;
   align-items: center;
@@ -53,12 +68,22 @@ h1 { color: var(--primary-color); }
   text-decoration: none;
   color: inherit;
 }
-.vehicle-item:hover { background-color: #f9f9f9; }
+.vehicle-item:hover
+{
+  background-color: #f9f9f9;
+}
 .vehicle-item img {
   width: 80px;
   height: 60px;
   object-fit: cover;
   border-radius: 5px;
 }
-.vehicle-info h4 { margin: 0 0 5px; }
-.vehicle-info p { margin: 0; color: #777; }
+.vehicle-info h4
+{
+  margin: 0 0 5px;
+}
+.vehicle-info p
+{
+  margin: 0;
+  color: #777;
+}

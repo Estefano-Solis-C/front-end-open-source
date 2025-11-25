@@ -11,7 +11,7 @@
     <img [src]="item.vehicle.imageUrl" class="vehicle-image" [alt]="item.vehicle.brand + ' ' + item.vehicle.model" />
     <div class="card-content">
       <h3>{{ item.vehicle.brand }} {{ item.vehicle.model }}</h3>
-      <p><strong>{{ 'BOOKING_REQUESTS.CLIENT_ID' | translate }}:</strong> {{ 'BOOKING_REQUESTS.USER' | translate }} #{{ item.booking.userId }}</p>
+      <p><strong>{{ 'BOOKING_REQUESTS.CLIENT_ID' | translate }}:</strong> {{ item.renterName }}</p>
       <p>
         <strong>{{ 'BOOKING_REQUESTS.DATES' | translate }}:</strong>
         {{ 'BOOKING_REQUESTS.DATE_RANGE' | translate: { start: (item.booking.startDate | date: 'dd/MM/yyyy'), end: (item.booking.endDate | date: 'dd/MM/yyyy') } }}
@@ -19,7 +19,7 @@
       <p><strong>{{ 'BOOKING_REQUESTS.INCOME' | translate }}:</strong> <span class="price">S/ {{ item.booking.totalPrice }}</span></p>
     </div>
     <div class="card-status" [ngClass]="item.booking.status">
-      {{ item.booking.status }}
+      {{ ('STATUS.' + item.booking.status) | translate }}
     </div>
 
     <div class="card-actions" *ngIf="item.booking.status === 'PENDING'">

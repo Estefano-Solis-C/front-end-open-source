@@ -15,6 +15,7 @@ interface AuthResponse {
   token: string;
 }
 
+/** AuthService manages authentication, user persistence and language preference. */
 @Injectable({
   providedIn: 'root'
 })
@@ -33,13 +34,12 @@ export class AuthService {
     this.applyUserLanguage(this.currentUserSubject.value);
   }
 
+  /** Get current user synchronously */
   public getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Loads the persisted user from localStorage if present.
-   */
+  /** Load user from localStorage if present */
   private loadUserFromStorage() {
     const userData = localStorage.getItem('currentUser');
     if (userData) {
@@ -47,9 +47,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Applies a user-scoped language preference or falls back to Spanish.
-   */
+  /** Apply language preference for given user or fallback */
   private applyUserLanguage(user: User | null) {
     const fallback = 'es';
     if (user) {
@@ -64,10 +62,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Authenticates the user and persists both token and user model.
-   * Navigates to the proper area based on the first role.
-   */
+  /** Perform login, store token and user, navigate based on role */
   login(email: string, password: string): Observable<User> {
     const loginData = { email, password };
 
@@ -95,15 +90,13 @@ export class AuthService {
         }
       }),
       catchError(error => {
-        alert('Invalid credentials');
+        alert(this.translate.instant('LOGIN.INVALID_CREDENTIALS'));
         return throwError(() => error);
       })
     );
   }
 
-  /**
-   * Clears auth token and user, resets language to default, and redirects to login.
-   */
+  /** Logout and clear persisted auth data */
   logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
@@ -114,16 +107,12 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  /**
-   * Registers a new user in the backend.
-   */
+  /** Register a new user */
   register(userData: UserDto): Observable<User> {
     return this.http.post<User>(`${this.baseUrl}/authentication/sign-up`, userData);
   }
 
-  /**
-   * Normalizes possibly partial backend responses into an app User model.
-   */
+  /** Normalize backend response into User model */
   private adaptToUser(resp: any, fallback: User): User {
     const roleFromArray = Array.isArray(resp?.roles) && resp.roles.length ? resp.roles[0] : undefined;
     const role = (resp?.role ?? roleFromArray ?? fallback.role) as string;
@@ -136,9 +125,11 @@ export class AuthService {
     );
   }
 
+  /** Update user information */
   updateUser(user: User): Observable<User> {
-    return this.http.put<any>(`${this.baseUrl}/users/${user.id}`, user).pipe(
-      map(resp => this.adaptToUser(resp, user)),
+    const updateData = { name: user.name, email: user.email };
+    return this.http.patch<any>(`${this.baseUrl}/users/${user.id}`, updateData).pipe(
+      map(resp => this.adaptToUser(resp, { ...user, ...updateData })),
       tap(normalizedUser => {
         this.currentUserSubject.next(normalizedUser);
         localStorage.setItem('currentUser', JSON.stringify(normalizedUser));
@@ -146,10 +137,12 @@ export class AuthService {
     );
   }
 
+  /** Change user password */
   changePassword(userId: number, currentPassword: string, newPassword: string): Observable<any> {
     return this.http.patch(`${this.baseUrl}/users/${userId}/password`, { currentPassword, newPassword });
   }
 
+  /** Delete user account and logout */
   deleteAccount(userId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/users/${userId}`).pipe(
       tap(() => {

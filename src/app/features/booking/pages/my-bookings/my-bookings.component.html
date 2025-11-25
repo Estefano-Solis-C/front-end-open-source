@@ -11,7 +11,7 @@
 
     <div class="card-image-wrapper">
       <img [src]="item.vehicle.imageUrl" class="vehicle-image" alt="{{ item.vehicle.brand }}">
-      <div class="days-remaining-badge" *ngIf="item.booking.status === 'activa'">
+      <div class="days-remaining-badge" *ngIf="item.booking.status === 'PENDING' || item.booking.status === 'CONFIRMED'">
         {{ 'MY_BOOKINGS.DAYS_REMAINING' | translate: {days: item.daysRemaining} }}
       </div>
     </div>
@@ -21,7 +21,7 @@
       <p class="booking-dates">{{ item.booking.startDate | date: 'dd MMM yyyy' }} - {{ item.booking.endDate | date: 'dd MMM yyyy' }}</p>
       <div class="price-status-wrapper">
         <p class="total-price">S/ {{ item.booking.totalPrice }}</p>
-        <span class="status-badge" [ngClass]="item.booking.status">{{ item.booking.status }}</span>
+        <span class="status-badge" [ngClass]="item.booking.status">{{ ('STATUS.' + item.booking.status) | translate }}</span>
       </div>
     </div>
 
@@ -29,11 +29,6 @@
       <a [routerLink]="['/my-bookings', item.booking.id]" class="action-button secondary">
         {{ 'MY_BOOKINGS.MANAGE_BOOKING' | translate }}
       </a>
-      <button *ngIf="item.booking.status === 'PENDING' || item.booking.status === 'CONFIRMED'"
-              (click)="cancelBooking(item.booking.id)"
-              class="action-button btn-danger">
-        {{ 'MY_BOOKINGS.CANCEL_BOOKING' | translate }}
-      </button>
     </div>
 
   </div>

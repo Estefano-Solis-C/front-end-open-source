@@ -22,8 +22,12 @@ export class TrackingComponent implements OnInit {
   ngOnInit(): void {
     const vehicleId = Number(this.route.snapshot.paramMap.get('id'));
     if (vehicleId) {
-      this.telemetryService.getTelemetryByVehicleId(vehicleId).subscribe(data => {
-        this.telemetry = data;
+      this.telemetryService.getTelemetryByVehicleId(vehicleId).subscribe(dataArray => {
+        if (Array.isArray(dataArray) && dataArray.length > 0) {
+          this.telemetry = dataArray[0];
+        } else {
+          this.telemetry = undefined;
+        }
       });
     }
   }

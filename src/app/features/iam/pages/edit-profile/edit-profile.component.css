@@ -4,7 +4,7 @@
 
 .edit-profile-header h1 {
   margin: 0;
-  margin-bottom: 30px; /* Mantenemos el espacio inferior */
+  margin-bottom: 30px;
   color: var(--primary-color);
 }
 
