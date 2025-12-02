@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   // Base URL for the API server
-  BASE_URL: 'http://localhost:8080/api/v1',
+  BASE_URL: 'https://back-end-open-source.onrender.com/api/v1',
 
   // API endpoints
   ENDPOINT_PATH_VEHICLES: '/vehicles',
