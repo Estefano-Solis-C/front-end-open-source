@@ -1,19 +1,9 @@
 <h1>Monitoreo del Vehículo</h1>
-
-<!-- Show waiting message when simulation hasn't started -->
-<div class="waiting-message" *ngIf="waitingForSimulation && !telemetry">
-  <div class="waiting-card">
-    <div class="waiting-icon">⏳</div>
-    <h2>Esperando inicio del viaje...</h2>
-    <p>El sistema está activo y monitoreando el vehículo. Los datos aparecerán cuando el viaje comience.</p>
+<div class="tracking-container" *ngIf="telemetry; else loading">
+  <div class="map-placeholder">
+    <p>Simulación de Mapa</p>
+    <div class="car-marker">🚗</div>
   </div>
-</div>
-
-<!-- Show telemetry data when available -->
-<div class="tracking-container" *ngIf="telemetry">
-  <!-- Leaflet Map Container -->
-  <div id="map"></div>
-
   <div class="info-card">
     <h2>Información en Tiempo Real</h2>
     <p><strong>Vehículo ID:</strong> {{ telemetry.vehicleId }}</p>
@@ -24,3 +14,6 @@
     <p><strong>Hora:</strong> {{ telemetry.timestamp }}</p>
   </div>
 </div>
+<ng-template #loading>
+  <p>Cargando datos de telemetría...</p>
+</ng-template>

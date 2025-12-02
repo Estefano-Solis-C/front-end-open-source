@@ -1,75 +1,15 @@
-.tracking-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-}
-
-/* Leaflet Map Container - CRITICAL: Must have explicit height */
-#map {
-  height: 500px;
-  width: 100%;
+.tracking-container { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.map-placeholder {
+  background-color: #e9e9e9;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-}
-
-.info-card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .tracking-container {
-    grid-template-columns: 1fr;
-  }
-
-  #map {
-    height: 400px;
-  }
-}
-
-/* Waiting state styles */
-.waiting-message {
+  height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
-  padding: 20px;
-}
-
-.waiting-card {
-  background-color: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 500px;
-  border: 2px solid #ffc107;
-}
-
-.waiting-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
-}
-
-.waiting-card h2 {
-  color: #333;
-  margin-bottom: 15px;
+  flex-direction: column;
   font-size: 1.5em;
+  color: #aaa;
+  position: relative;
 }
-
-.waiting-card p {
-  color: #666;
-  font-size: 1em;
-  line-height: 1.6;
-}
-
+.car-marker { font-size: 40px; }
+.info-card { background-color: white; padding: 20px; border-radius: 8px; }
