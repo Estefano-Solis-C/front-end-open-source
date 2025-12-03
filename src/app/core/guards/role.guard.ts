@@ -4,9 +4,9 @@ import { AuthService } from '../../features/iam/services/auth.service';
 import { map, take } from 'rxjs/operators';
 
 /**
- * Role-based guard. Use in routes with data: { roles: [...] }.
+ * @summary Role-based guard. Use in routes with data: { roles: [...] }.
  */
-export const roleGuard: CanActivateFn = (route, state) => {
+export const roleGuard: CanActivateFn = (route) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -22,8 +22,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
       if (allowedRoles.length === 0 || allowedRoles.includes(user.role)) {
         return true;
       }
-      // Redirect to a valid section according to user role
-      if (user.role === 'ROLE_ARRENDADOR') {
+      if (user.role === 'ROLE_OWNER') {
         router.navigate(['/my-vehicles']);
       } else {
         router.navigate(['/dashboard']);

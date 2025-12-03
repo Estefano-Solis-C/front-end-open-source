@@ -4,9 +4,9 @@ import { AuthService } from '../../features/iam/services/auth.service';
 import { map, take } from 'rxjs/operators';
 
 /**
- * Redirects the empty child route to the appropriate section based on user role.
+ * @summary Redirects the empty child route to the appropriate section based on user role.
  */
-export const defaultRedirectGuard: CanActivateFn = (route, state) => {
+export const defaultRedirectGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -17,12 +17,11 @@ export const defaultRedirectGuard: CanActivateFn = (route, state) => {
         router.navigate(['/login']);
         return false;
       }
-      if (user.role === 'ROLE_ARRENDATARIO') {
+      if (user.role === 'ROLE_RENTER') {
         router.navigate(['/dashboard']);
       } else {
         router.navigate(['/my-vehicles']);
       }
-      // Cancel current navigation (empty route)
       return false;
     })
   );

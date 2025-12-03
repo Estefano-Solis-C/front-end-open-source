@@ -3,7 +3,7 @@
     <a routerLink="/dashboard">RentiCar</a>
   </div>
 
-  <ul *ngIf="user.role === 'ROLE_ARRENDATARIO'">
+  <ul *ngIf="user.role === 'ROLE_RENTER'">
     <li>
       <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -30,7 +30,7 @@
     </li>
   </ul>
 
-  <ul *ngIf="user.role === 'ROLE_ARRENDADOR'">
+  <ul *ngIf="user.role === 'ROLE_OWNER'">
     <li>
       <a routerLink="/my-vehicles" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16.5V18a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-1.5M14 12V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v6m12 0h4l-2.5-4-2.5 4Z"/><path d="M4 12h5.5"/><circle cx="18" cy="16.5" r="2.5"/><circle cx="6" cy="16.5" r="2.5"/></svg>

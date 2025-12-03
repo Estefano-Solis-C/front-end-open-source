@@ -3,7 +3,10 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../features/iam/services/auth.service';
 import { map, take } from 'rxjs/operators';
 
-export const authGuard: CanActivateFn = (route, state) => {
+/**
+ * @summary Protects routes from anonymous access, redirecting unauthenticated users to login.
+ */
+export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 

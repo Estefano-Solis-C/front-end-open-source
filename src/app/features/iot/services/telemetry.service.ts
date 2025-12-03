@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Telemetry } from '../models/telemetry.model';
 import { environment } from '../../../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../../shared/infrastructure/notification/notification.service';
 
 interface RouteCoordinate {
   lat: number;
@@ -10,7 +12,7 @@ interface RouteCoordinate {
 }
 
 /**
- * DTO para crear un nuevo registro de telemetría
+ * @summary DTO to create a new telemetry record
  */
 export interface TelemetryCreateDto {
   vehicleId: number;
@@ -18,7 +20,7 @@ export interface TelemetryCreateDto {
   longitude: number;
   speed: number;
   fuelLevel: number;
-  timestamp?: string; // Opcional, el backend puede generarlo
+  timestamp?: string; // Optional, backend may generate it
 }
 
 @Injectable({
@@ -28,34 +30,38 @@ export class TelemetryService {
   private apiUrl = environment.BASE_URL + environment.ENDPOINT_PATH_TELEMETRY;
   private simulationUrl = environment.BASE_URL + '/simulation';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private translate: TranslateService, private notifier: NotificationService) { }
 
   /**
-   * Obtiene los datos de telemetría de un vehículo específico
-   * @param vehicleId ID del vehículo
-   * @returns Observable con array de datos de telemetría
+   * @summary Get telemetry data for a specific vehicle
+   * @param vehicleId vehicle id
+   * @returns Observable with telemetry array
    */
   getTelemetryByVehicleId(vehicleId: number): Observable<Telemetry[]> {
-    return this.http.get<Telemetry[]>(`${this.apiUrl}/vehicle/${vehicleId}`);
+    return this.http.get<Telemetry[]>(`${this.apiUrl}/vehicle/${vehicleId}`).pipe(
+      catchError(err => {
+        this.notifier.showError('ERRORS.TELEMETRY.LIST_FETCH_FAILED');
+        return throwError(() => err);
+      })
+    );
   }
 
   /**
-   * Obtiene la última telemetría registrada para un vehículo
-   * @param vehicleId ID del vehículo
-   * @returns Observable con el último dato de telemetría
+   * @summary Get the latest telemetry for a vehicle
+   * @param vehicleId vehicle id
    */
   getLatestTelemetry(vehicleId: number): Observable<Telemetry> {
-    return this.http.get<Telemetry>(`${this.apiUrl}/vehicle/${vehicleId}/latest`);
+    return this.http.get<Telemetry>(`${this.apiUrl}/vehicle/${vehicleId}/latest`).pipe(
+      catchError(err => {
+        this.notifier.showError('ERRORS.TELEMETRY.DETAIL_FETCH_FAILED');
+        return throwError(() => err);
+      })
+    );
   }
 
   /**
-   * Obtiene una ruta simulada entre dos coordenadas
-   * Endpoint: GET /api/v1/simulation/route?startLat=X&startLng=Y&endLat=X&endLng=Y
-   * @param startLat Latitud de inicio
-   * @param startLng Longitud de inicio
-   * @param endLat Latitud de destino
-   * @param endLng Longitud de destino
-   * @returns Observable con la ruta simulada (array de coordenadas)
+   * @summary Get a simulated route between two coordinates
+   * GET /api/v1/simulation/route?startLat=X&startLng=Y&endLat=X&endLng=Y
    */
   getSimulationRoute(startLat: number, startLng: number, endLat: number, endLng: number): Observable<RouteCoordinate[]> {
     const params = new HttpParams()
@@ -64,43 +70,29 @@ export class TelemetryService {
       .set('endLat', endLat.toString())
       .set('endLng', endLng.toString());
 
-    // Esperamos un array, no un objeto envuelto
-    return this.http.get<RouteCoordinate[]>(`${this.simulationUrl}/route`, { params });
+    return this.http.get<RouteCoordinate[]>(`${this.simulationUrl}/route`, { params }).pipe(
+      catchError(err => {
+        this.notifier.showError('ERRORS.TELEMETRY.ROUTE_FETCH_FAILED');
+        return throwError(() => err);
+      })
+    );
   }
 
   /**
-   * 📝 Registra un nuevo dato de telemetría manualmente
-   * Endpoint: POST /api/v1/telemetry
-   *
-   * @param data Objeto con los datos de telemetría a registrar
-   * @returns Observable con la telemetría creada
-   *
-   * @example
-   * ```typescript
-   * const telemetryData: TelemetryCreateDto = {
-   *   vehicleId: 1,
-   *   latitude: -12.0464,
-   *   longitude: -77.0428,
-   *   speed: 45,
-   *   fuelLevel: 85,
-   *   timestamp: new Date().toISOString() // Opcional
-   * };
-   *
-   * this.telemetryService.recordTelemetry(telemetryData).subscribe({
-   *   next: (response) => console.log('Telemetría registrada:', response),
-   *   error: (err) => console.error('Error al registrar:', err)
-   * });
-   * ```
+   * @summary Record a new telemetry entry manually
+   * POST /api/v1/telemetry
    */
   recordTelemetry(data: TelemetryCreateDto): Observable<Telemetry> {
-    // Agregar timestamp automáticamente si no viene en el objeto
     const payload: TelemetryCreateDto = {
       ...data,
       timestamp: data.timestamp || new Date().toISOString()
     };
 
-    console.log('📝 [TELEMETRY SERVICE] Registrando telemetría:', payload);
-
-    return this.http.post<Telemetry>(this.apiUrl, payload);
+    return this.http.post<Telemetry>(this.apiUrl, payload).pipe(
+      catchError(err => {
+        this.notifier.showError('ERRORS.TELEMETRY.CREATE_FAILED');
+        return throwError(() => err);
+      })
+    );
   }
 }

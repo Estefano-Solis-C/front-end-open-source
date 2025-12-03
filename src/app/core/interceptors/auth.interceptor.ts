@@ -2,13 +2,18 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 
+/**
+ * @summary HTTP interceptor that attaches a Bearer token to outgoing requests when available.
+ */
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor() {}
 
   /**
-   * Attaches the Authorization header with the JWT from localStorage to all
-   * requests except authentication endpoints.
+   * @summary Intercepts outgoing requests and adds the Authorization header if a token exists.
+   * @param req - The original HTTP request.
+   * @param next - The next handler in the chain.
+   * @returns An Observable of the HTTP event stream.
    */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('authToken');

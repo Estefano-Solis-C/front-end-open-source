@@ -128,7 +128,8 @@
     "CLIENT_OPINIONS": "Customer Opinions",
     "LOADING": "Loading reviews...",
     "PAGINATION": "Page {{current}} of {{total}}",
-    "NO_REVIEWS": "This vehicle has no reviews yet."
+    "NO_REVIEWS": "This vehicle has no reviews yet.",
+    "ANONYMOUS_USER": "Anonymous User"
   },
   "REVIEW_FORM": {
     "WRITE_OPINION": "Write your opinion",
@@ -198,5 +199,57 @@
     "CANCELED": "Canceled",
     "RESERVADO": "Reserved",
     "YA_RESERVADO": "Already Booked"
+  },
+  "ERRORS": {
+    "AUTH": {
+      "INVALID_CREDENTIALS": "Invalid credentials",
+      "REGISTER_FAILED": "We couldn't register your account. Please try again."
+    },
+    "USER": {
+      "UPDATE_FAILED": "We couldn't update your information. Please try again.",
+      "PASSWORD_CHANGE_FAILED": "We couldn't change your password. Please verify and try again.",
+      "DELETE_FAILED": "We couldn't delete your account. Please try again.",
+      "LIST_FETCH_FAILED": "We couldn't load users. Please try again."
+    },
+    "VEHICLE": {
+      "LIST_FETCH_FAILED": "We couldn't load vehicles. Please try again.",
+      "DETAIL_FETCH_FAILED": "We couldn't load the vehicle details. Please try again.",
+      "MY_LISTINGS_FETCH_FAILED": "We couldn't load your listings. Please try again.",
+      "CREATE_FAILED": "We couldn't create the vehicle. Please try again.",
+      "UPDATE_FAILED": "We couldn't update the vehicle. Please try again.",
+      "MY_VEHICLES_FETCH_FAILED": "We couldn't load your vehicles. Please try again.",
+      "DELETE_FAILED": "We couldn't delete the vehicle. Please try again."
+    },
+    "BOOKING": {
+      "LIST_FETCH_FAILED": "We couldn't load your bookings. Please try again.",
+      "DETAIL_FETCH_FAILED": "We couldn't load the booking details. Please try again.",
+      "UPDATE_FAILED": "We couldn't update the booking. Please try again.",
+      "CONFIRM_FAILED": "We couldn't confirm the booking. Please try again.",
+      "REJECT_FAILED": "We couldn't reject the booking. Please try again.",
+      "CANCEL_FAILED": "We couldn't cancel the booking. Please try again.",
+      "DELETE_FAILED": "We couldn't delete the booking. Please try again.",
+      "CREATE_FAILED": "We couldn't create the booking. Please try again.",
+      "REQUESTS_FETCH_FAILED": "We couldn't load booking requests. Please try again."
+    },
+    "TELEMETRY": {
+      "LIST_FETCH_FAILED": "We couldn't load telemetry data. Please try again.",
+      "DETAIL_FETCH_FAILED": "We couldn't load the latest telemetry. Please try again.",
+      "ROUTE_FETCH_FAILED": "We couldn't load the simulation route. Please try again.",
+      "CREATE_FAILED": "We couldn't record telemetry. Please try again."
+    },
+    "REVIEW": {
+      "LIST_FETCH_FAILED": "We couldn't load reviews. Please try again.",
+      "CREATE_FAILED": "We couldn't submit your review. Please try again."
+    }
+  },
+  "LISTINGS": {
+    "UNKNOWN_OWNER": "Unknown Owner"
+  },
+  "PUBLIC": {
+    "PAGE_NOT_FOUND": {
+      "TITLE": "Page Not Found",
+      "DESCRIPTION": "The page you are looking for doesn't exist or has been moved.",
+      "GO_HOME": "Go to Home"
+    }
   }
 }

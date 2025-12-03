@@ -1,15 +1,19 @@
-<div class="language-switcher">
+<div class="language-switcher" role="group" aria-label="language-switcher">
   <button
     class="lang-button"
     [class.active]="currentLang === 'es'"
-    (click)="switchLanguage('es')">
+    (click)="switchLanguage('es')"
+    aria-pressed="{{ currentLang === 'es' }}"
+    aria-label="switch-to-spanish">
     ES
   </button>
-  <div class="separator"></div>
+  <div class="separator" role="separator" aria-hidden="true"></div>
   <button
     class="lang-button"
     [class.active]="currentLang === 'en'"
-    (click)="switchLanguage('en')">
+    (click)="switchLanguage('en')"
+    aria-pressed="{{ currentLang === 'en' }}"
+    aria-label="switch-to-english">
     EN
   </button>
 </div>

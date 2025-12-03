@@ -4,6 +4,11 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../features/iam/services/auth.service';
 
+/**
+ * @summary Language preference toggle component.
+ * Provides a simple UI to switch between supported languages and persists
+ * the selection for authenticated users.
+ */
 @Component({
   selector: 'app-language-switcher',
   standalone: true,
@@ -12,12 +17,12 @@ import { AuthService } from '../../../features/iam/services/auth.service';
   styleUrls: ['./language-switcher.component.css']
 })
 export class LanguageSwitcherComponent implements OnInit, OnDestroy {
-  currentLang: string = 'es';
+  currentLang: string = 'en';
   private sub?: Subscription;
 
   constructor(private translate: TranslateService, private authService: AuthService) {
     // Initialize with the current active language or default
-    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'es';
+    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
   }
 
   ngOnInit(): void {
@@ -28,8 +33,8 @@ export class LanguageSwitcherComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Switches the active language. If a user is authenticated, persists the
-   * preference under a user-scoped key in localStorage.
+   * @summary Switch active language.
+   * @param lang Target language code.
    */
   switchLanguage(lang: string) {
     if (!lang || lang === this.translate.getCurrentLang()) return;

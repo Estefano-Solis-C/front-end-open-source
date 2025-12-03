@@ -1,0 +1,3 @@
+.pnf{display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;min-height:60vh;text-align:center}
+.pnf a{color:var(--primary-500)}
+

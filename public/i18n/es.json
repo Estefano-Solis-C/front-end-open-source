@@ -128,7 +128,8 @@
     "CLIENT_OPINIONS": "Opiniones de Clientes",
     "LOADING": "Cargando opiniones...",
     "PAGINATION": "Página {{current}} de {{total}}",
-    "NO_REVIEWS": "Este vehículo aún no tiene reseñas."
+    "NO_REVIEWS": "Este vehículo aún no tiene reseñas.",
+    "ANONYMOUS_USER": "Usuario Anónimo"
   },
   "REVIEW_FORM": {
     "WRITE_OPINION": "Escribe tu opinión",
@@ -198,5 +199,57 @@
     "CANCELED": "Cancelada",
     "RESERVADO": "Reservado",
     "YA_RESERVADO": "Ya Reservado"
+  },
+  "ERRORS": {
+    "AUTH": {
+      "INVALID_CREDENTIALS": "Credenciales inválidas",
+      "REGISTER_FAILED": "No pudimos registrar tu cuenta. Inténtalo nuevamente."
+    },
+    "USER": {
+      "UPDATE_FAILED": "No pudimos actualizar tu información. Inténtalo nuevamente.",
+      "PASSWORD_CHANGE_FAILED": "No pudimos cambiar tu contraseña. Verifica e inténtalo nuevamente.",
+      "DELETE_FAILED": "No pudimos eliminar tu cuenta. Inténtalo nuevamente.",
+      "LIST_FETCH_FAILED": "No pudimos cargar los usuarios. Inténtalo nuevamente."
+    },
+    "VEHICLE": {
+      "LIST_FETCH_FAILED": "No pudimos cargar los vehículos. Inténtalo nuevamente.",
+      "DETAIL_FETCH_FAILED": "No pudimos cargar los detalles del vehículo. Inténtalo nuevamente.",
+      "MY_LISTINGS_FETCH_FAILED": "No pudimos cargar tus publicaciones. Inténtalo nuevamente.",
+      "CREATE_FAILED": "No pudimos crear el vehículo. Inténtalo nuevamente.",
+      "UPDATE_FAILED": "No pudimos actualizar el vehículo. Inténtalo nuevamente.",
+      "MY_VEHICLES_FETCH_FAILED": "No pudimos cargar tus vehículos. Inténtalo nuevamente.",
+      "DELETE_FAILED": "No pudimos eliminar el vehículo. Inténtalo nuevamente."
+    },
+    "BOOKING": {
+      "LIST_FETCH_FAILED": "No pudimos cargar tus reservas. Inténtalo nuevamente.",
+      "DETAIL_FETCH_FAILED": "No pudimos cargar los detalles de la reserva. Inténtalo nuevamente.",
+      "UPDATE_FAILED": "No pudimos actualizar la reserva. Inténtalo nuevamente.",
+      "CONFIRM_FAILED": "No pudimos confirmar la reserva. Inténtalo nuevamente.",
+      "REJECT_FAILED": "No pudimos rechazar la reserva. Inténtalo nuevamente.",
+      "CANCEL_FAILED": "No pudimos cancelar la reserva. Inténtalo nuevamente.",
+      "DELETE_FAILED": "No pudimos eliminar la reserva. Inténtalo nuevamente.",
+      "CREATE_FAILED": "No pudimos crear la reserva. Inténtalo nuevamente.",
+      "REQUESTS_FETCH_FAILED": "No pudimos cargar las solicitudes de reserva. Inténtalo nuevamente."
+    },
+    "TELEMETRY": {
+      "LIST_FETCH_FAILED": "No pudimos cargar los datos de telemetría. Inténtalo nuevamente.",
+      "DETAIL_FETCH_FAILED": "No pudimos cargar la última telemetría. Inténtalo nuevamente.",
+      "ROUTE_FETCH_FAILED": "No pudimos cargar la ruta de simulación. Inténtalo nuevamente.",
+      "CREATE_FAILED": "No pudimos registrar la telemetría. Inténtalo nuevamente."
+    },
+    "REVIEW": {
+      "LIST_FETCH_FAILED": "No pudimos cargar las reseñas. Inténtalo nuevamente.",
+      "CREATE_FAILED": "No pudimos enviar tu reseña. Inténtalo nuevamente."
+    }
+  },
+  "LISTINGS": {
+    "UNKNOWN_OWNER": "Propietario Desconocido"
+  },
+  "PUBLIC": {
+    "PAGE_NOT_FOUND": {
+      "TITLE": "Página no encontrada",
+      "DESCRIPTION": "La página que buscas no existe o ha sido movida.",
+      "GO_HOME": "Ir al Inicio"
+    }
   }
 }

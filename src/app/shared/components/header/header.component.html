@@ -1,19 +1,19 @@
-<header class="header">
-  <button class="menu-toggle" (click)="onMenuToggle()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+<header class="header" role="banner" aria-label="main-header">
+  <button class="menu-toggle" (click)="onMenuToggle()" aria-label="toggle-menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
   </button>
 
-  <div class="user-info">
-    <span *ngIf="currentUser$ | async as user; else guest">
+  <div class="user-info" aria-live="polite">
+    <span class="welcome-text" *ngIf="currentUser$ | async as user; else guest">
       {{ 'HEADER.WELCOME_USER' | translate: {name: user.name} }}
     </span>
     <ng-template #guest>
-      <span>{{ 'HEADER.WELCOME_GUEST' | translate }}</span>
+      <span class="welcome-text">{{ 'HEADER.WELCOME_GUEST' | translate }}</span>
     </ng-template>
   </div>
-  <div class="controls">
+  <div class="controls" role="group" aria-label="header-controls">
     <app-language-switcher></app-language-switcher>
-    <button *ngIf="currentUser$ | async" (click)="logout()" class="logout-button">
+    <button *ngIf="currentUser$ | async" (click)="logout()" class="logout-button" aria-label="logout">
       {{ 'HEADER.LOGOUT' | translate }}
     </button>
   </div>
