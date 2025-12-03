@@ -259,32 +259,29 @@ export class TrackingComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Loads initial data for the tracking component.
+   * First restores route history if available, then fetches latest telemetry.
+   * If telemetry is not found (404), initializes with random position and starts simulation.
+   */
   private async loadInitialData(): Promise<void> {
-    // 1️⃣ PRIMERO: Restaurar historial del recorrido (si existe)
     console.log('🔄 [INIT] Iniciando carga de datos...');
 
     const restoredState = await this.restoreRouteHistory();
 
-    // 2️⃣ DESPUÉS: Obtener datos actuales del API
     const sub = this.telemetryService.getLatestTelemetry(this.vehicleId).subscribe({
       next: (data) => {
         if (data) {
-          // Asignar datos para la tarjeta
           this.renterName = data.renterName ?? 'No disponible';
 
           if (restoredState.restored) {
-            // ✅ RESTAURACIÓN EXITOSA: Usar datos del historial
             console.log('✨ [INIT] Usando estado restaurado del historial');
 
             this.currentSpeed = restoredState.lastSpeed || Math.floor(data.speed);
             this.currentFuel = restoredState.lastFuel || Math.floor(data.fuelLevel);
 
-            // La posición ya fue establecida por restoreRouteHistory
-            // currentPosition ya tiene el valor correcto
-
             console.log(`📍 [INIT] Continuando desde posición restaurada: (${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)})`);
           } else {
-            // ⚠️ SIN HISTORIAL: Usar datos del API
             console.log('🆕 [INIT] No hay historial, usando datos del API');
 
             this.currentSpeed = Math.floor(data.speed);
@@ -300,33 +297,60 @@ export class TrackingComponent implements OnInit, OnDestroy {
             }
           }
 
-          // Inicializar valores temporales con los valores actuales
           this.tempSpeed = this.currentSpeed;
           this.tempFuel = this.currentFuel;
 
           this.vehicleState = this.currentSpeed > 0 ? 'Moviéndose' : 'Detenido';
 
-          // Inicializar timers de actualización de UI y guardado
           this.lastUIUpdateTime = performance.now();
           this.lastSaveTime = performance.now();
           this.nextUIUpdateDelay = 1000 + Math.random() * 1000; // 1-2 segundos
 
           console.log(`⚙️ [INIT] Estado inicial: Velocidad=${this.currentSpeed} km/h, Combustible=${this.currentFuel}%`);
-
-          // 3️⃣ FINALMENTE: Iniciar simulación desde la posición actual (restaurada o del API)
           console.log('🚀 [INIT] Iniciando simulación continua...');
           this.startRouteSimulation();
         }
       },
       error: (err) => {
-        console.error('❌ [INIT] Error al obtener datos del API:', err);
+        const errorStatus = err?.status;
+
+        if (errorStatus === 404) {
+          console.log('🆕 [INIT] No se encontró telemetría previa (404). Inicializando vehículo nuevo con posición aleatoria...');
+
+          const randomLat = this.LIMA_BOUNDS.latMin + Math.random() * (this.LIMA_BOUNDS.latMax - this.LIMA_BOUNDS.latMin);
+          const randomLng = this.LIMA_BOUNDS.lngMin + Math.random() * (this.LIMA_BOUNDS.lngMax - this.LIMA_BOUNDS.lngMin);
+
+          this.currentPosition = { lat: randomLat, lng: randomLng };
+          this.previousPosition = { ...this.currentPosition };
+
+          this.vehicleMarker.setLatLng(this.currentPosition);
+          this.map.setView(this.currentPosition, 15);
+
+          this.currentSpeed = 0;
+          this.currentFuel = 100;
+          this.tempSpeed = 0;
+          this.tempFuel = 100;
+          this.renterName = 'No disponible';
+          this.vehicleState = 'Detenido';
+
+          this.lastUIUpdateTime = performance.now();
+          this.lastSaveTime = performance.now();
+          this.nextUIUpdateDelay = 1000 + Math.random() * 1000;
+
+          console.log(`📍 [INIT] Vehículo nuevo posicionado en: (${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)})`);
+          console.log(`⚙️ [INIT] Estado inicial: Velocidad=0 km/h, Combustible=100%`);
+
+          console.log('🚀 [INIT] Iniciando simulación automática para vehículo nuevo...');
+          this.startRouteSimulation();
+        } else {
+          console.error('❌ [INIT] Error al obtener datos del API:', err);
+        }
       }
     });
     this.subscriptions.push(sub);
   }
 
   private startRouteSimulation(): void {
-    // Generar destino aleatorio dentro de los límites de Lima
     const destLat = this.LIMA_BOUNDS.latMin + Math.random() * (this.LIMA_BOUNDS.latMax - this.LIMA_BOUNDS.latMin);
     const destLng = this.LIMA_BOUNDS.lngMin + Math.random() * (this.LIMA_BOUNDS.lngMax - this.LIMA_BOUNDS.lngMin);
 
@@ -350,7 +374,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
           this.vehicleState = 'Moviéndose';
           this.updateVehicleTooltip();
 
-          // Iniciar animación si no está corriendo
           if (this.animationFrameId === null) {
             this.animationFrameId = requestAnimationFrame(this.animateStep);
           }
@@ -360,7 +383,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('❌ [FRONTEND] Error HTTP al pedir ruta:', err);
-        // Reintentar después de 5 segundos
         setTimeout(() => this.startRouteSimulation(), 5000);
       }
     });
