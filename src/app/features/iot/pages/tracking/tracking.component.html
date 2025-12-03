@@ -1,51 +1,59 @@
-<div class="tracking-page">
-  <h1 class="page-title">🚗 Simulación Autónoma de Vehículo en Tiempo Real</h1>
+<div class="tracking-container">
+  <!-- Contenedor del Mapa -->
+  <div id="map" class="map-container"></div>
 
-  <div class="tracking-container">
-    <!-- Mapa de Leaflet -->
-    <div class="map-section">
-      <div id="map" class="map-container"></div>
+  <!-- Panel de Estado Superpuesto -->
+  <div class="status-panel">
+    <div class="status-header">
+      <h3>📍 Monitor de Rastreo en Tiempo Real</h3>
     </div>
 
-    <!-- Tarjeta de Información -->
-    <div class="info-card">
-      <h2>📊 Información del Vehículo</h2>
-
-      <div class="info-item">
-        <span class="info-label">👤 Conductor:</span>
-        <span class="info-value">{{ renterName }}</span>
+    <div class="status-content">
+      <!-- Nombre del Arrendatario -->
+      <div class="status-item">
+        <span class="status-label">👤 Conductor:</span>
+        <span class="status-value">{{ renterName }}</span>
       </div>
 
-      <div class="info-item">
-        <span class="info-label">📍 Estado:</span>
-        <span class="info-value status"
-              [class.moving]="vehicleState === 'Moviéndose'"
-              [class.stopped]="vehicleState === 'Detenido'">
+      <!-- Estado Actual -->
+      <div class="status-item">
+        <span class="status-label">📊 Estado:</span>
+        <span class="status-value status-badge"
+              [style.background-color]="statusColor"
+              [style.color]="'white'">
           {{ vehicleState }}
         </span>
       </div>
 
-      <div class="info-item">
-        <span class="info-label">🚀 Velocidad:</span>
-        <span class="info-value speed">{{ currentSpeed }} km/h</span>
+      <!-- Velocidad -->
+      <div class="status-item">
+        <span class="status-label">🚀 Velocidad:</span>
+        <span class="status-value speed-value">{{ currentSpeed }} km/h</span>
       </div>
 
-      <div class="info-item">
-        <span class="info-label">⛽ Combustible:</span>
-        <span class="info-value fuel"
+      <!-- Nivel de Gasolina -->
+      <div class="status-item">
+        <span class="status-label">⛽ Gasolina:</span>
+        <span class="status-value fuel-value"
               [class.low-fuel]="currentFuel <= 20"
               [class.critical-fuel]="currentFuel <= 10">
-          {{ currentFuel.toFixed(1) }}%
+          {{ currentFuel }}%
         </span>
       </div>
 
-      <div class="info-description">
-        <p class="auto-mode">🤖 Modo Autónomo Activo</p>
-        <p class="simulation-info">
-          El vehículo se mueve automáticamente por Lima,
-          deteniéndose cada 5 segundos antes de continuar hacia un nuevo destino aleatorio.
-        </p>
+      <!-- Información adicional -->
+      <div class="status-item timestamp">
+        <span class="status-label">🕐 Actualización:</span>
+        <span class="status-value">En tiempo real</span>
       </div>
+    </div>
+
+    <!-- Indicador de estado visual -->
+    <div class="status-indicator"
+         [class.moving]="currentSpeed > 0"
+         [class.stopped]="currentSpeed === 0">
+      <div class="pulse-dot"></div>
     </div>
   </div>
 </div>
+

@@ -6,4 +6,6 @@ export interface Telemetry {
   speed: number;
   fuelLevel: number;
   timestamp: string;
+  renterName?: string;
+  plannedRoute?: Array<{ lat: number; lng: number }>;
 }
