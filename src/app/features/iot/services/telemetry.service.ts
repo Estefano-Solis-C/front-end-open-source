@@ -9,6 +9,18 @@ interface RouteCoordinate {
   lng: number;
 }
 
+/**
+ * DTO para crear un nuevo registro de telemetría
+ */
+export interface TelemetryCreateDto {
+  vehicleId: number;
+  latitude: number;
+  longitude: number;
+  speed: number;
+  fuelLevel: number;
+  timestamp?: string; // Opcional, el backend puede generarlo
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -54,5 +66,41 @@ export class TelemetryService {
 
     // Esperamos un array, no un objeto envuelto
     return this.http.get<RouteCoordinate[]>(`${this.simulationUrl}/route`, { params });
+  }
+
+  /**
+   * 📝 Registra un nuevo dato de telemetría manualmente
+   * Endpoint: POST /api/v1/telemetry
+   *
+   * @param data Objeto con los datos de telemetría a registrar
+   * @returns Observable con la telemetría creada
+   *
+   * @example
+   * ```typescript
+   * const telemetryData: TelemetryCreateDto = {
+   *   vehicleId: 1,
+   *   latitude: -12.0464,
+   *   longitude: -77.0428,
+   *   speed: 45,
+   *   fuelLevel: 85,
+   *   timestamp: new Date().toISOString() // Opcional
+   * };
+   *
+   * this.telemetryService.recordTelemetry(telemetryData).subscribe({
+   *   next: (response) => console.log('Telemetría registrada:', response),
+   *   error: (err) => console.error('Error al registrar:', err)
+   * });
+   * ```
+   */
+  recordTelemetry(data: TelemetryCreateDto): Observable<Telemetry> {
+    // Agregar timestamp automáticamente si no viene en el objeto
+    const payload: TelemetryCreateDto = {
+      ...data,
+      timestamp: data.timestamp || new Date().toISOString()
+    };
+
+    console.log('📝 [TELEMETRY SERVICE] Registrando telemetría:', payload);
+
+    return this.http.post<Telemetry>(this.apiUrl, payload);
   }
 }

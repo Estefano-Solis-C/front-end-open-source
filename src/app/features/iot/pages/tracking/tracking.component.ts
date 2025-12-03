@@ -18,7 +18,10 @@ interface LatLng { lat: number; lng: number; }
 export class TrackingComponent implements OnInit, OnDestroy {
   private map!: L.Map;
   private vehicleMarker!: L.Marker;
-  private routePolyline: L.Polyline | null = null;
+  private tracePolyline!: L.Polyline; // Rastro persistente del recorrido (snake effect)
+  private readonly MAX_TRACE_POINTS = 5000; // Límite para optimización de rendimiento
+  private readonly MIN_POINT_DISTANCE = 0.005; // 5 metros en km (filtro de ruido)
+  private readonly MAX_ANGLE_DIFFERENCE = 5; // Grados máximos para considerar colineal
   private carIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/3097/3097136.png',
     iconSize: [40, 40],
@@ -63,6 +66,9 @@ export class TrackingComponent implements OnInit, OnDestroy {
   private nextUIUpdateDelay = 1000; // Intervalo aleatorio entre 1000-2000ms
   private tempSpeed = 0; // Velocidad temporal calculada en cada frame
   private tempFuel = 100; // Combustible temporal calculado en cada frame
+
+  // Variable para persistencia de sesión (guardado automático cada 5s)
+  private lastSaveTime = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -111,6 +117,16 @@ export class TrackingComponent implements OnInit, OnDestroy {
       icon: this.carIcon
     }).addTo(this.map);
 
+    // ✅ Inicializar rastro persistente (snake effect) - SE CREA UNA SOLA VEZ
+    this.tracePolyline = L.polyline([], {
+      color: '#1976D2',        // Azul fuerte distintivo
+      weight: 4,               // Grosor visible
+      opacity: 0.8,            // Semi-transparente para elegancia
+      smoothFactor: 1          // Suavizado de línea
+    }).addTo(this.map);
+
+    console.log('🐍 [FRONTEND] Rastro persistente (snake effect) inicializado');
+
     // Agregar tooltip informativo con formato correcto
     this.updateVehicleTooltip();
   }
@@ -154,39 +170,156 @@ export class TrackingComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadInitialData(): void {
-    // 1. Obtener última posición
+  /**
+   * 🔄 PERSISTENCIA: Restaura el historial del recorrido del vehículo
+   * - Carga todos los puntos de telemetría históricos
+   * - Los ordena cronológicamente (más antiguo → más reciente)
+   * - Reconstruye el rastro usando addOptimizedPoint (con simplificación)
+   * - Actualiza la posición inicial al último punto conocido
+   * - Retorna Promise con información de si se restauró el estado
+   */
+  private restoreRouteHistory(): Promise<{ restored: boolean; lastPosition?: LatLng; lastSpeed?: number; lastFuel?: number }> {
+    return new Promise((resolve) => {
+      console.log('📚 [RESTAURACIÓN] Cargando historial del vehículo...');
+
+      const sub = this.telemetryService.getTelemetryByVehicleId(this.vehicleId).subscribe({
+        next: (historyData) => {
+          if (!historyData || historyData.length === 0) {
+            console.log('📚 [RESTAURACIÓN] No hay historial previo para este vehículo');
+            resolve({ restored: false });
+            return;
+          }
+
+          // Ordenar por timestamp (más antiguo primero) para reconstruir el camino correctamente
+          const sortedHistory = historyData.sort((a, b) => {
+            const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            const dateB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+            return dateA - dateB;
+          });
+
+          console.log(`📚 [RESTAURACIÓN] ${sortedHistory.length} puntos encontrados en el historial`);
+
+          // Reconstruir rastro usando el mismo método optimizado
+          let reconstructedPoints = 0;
+          sortedHistory.forEach((telemetry) => {
+            if (telemetry.latitude && telemetry.longitude) {
+              // Usar addOptimizedPoint para mantener la misma simplificación
+              this.addOptimizedPoint(telemetry.latitude, telemetry.longitude);
+              reconstructedPoints++;
+            }
+          });
+
+          console.log(`✅ [RESTAURACIÓN] Rastro reconstruido con ${reconstructedPoints} puntos (optimizados)`);
+
+          // Obtener última telemetría para restaurar estado completo
+          const lastTelemetry = sortedHistory[sortedHistory.length - 1];
+
+          if (lastTelemetry.latitude && lastTelemetry.longitude) {
+            const lastPosition: LatLng = {
+              lat: lastTelemetry.latitude,
+              lng: lastTelemetry.longitude
+            };
+
+            // Actualizar posición del vehículo
+            this.currentPosition = lastPosition;
+            this.previousPosition = { ...this.currentPosition };
+            this.vehicleMarker.setLatLng(this.currentPosition);
+
+            // Restaurar velocidad y combustible
+            const lastSpeed = Math.floor(lastTelemetry.speed || 0);
+            const lastFuel = Math.floor(lastTelemetry.fuelLevel || 100);
+
+            // Centrar mapa en la última posición
+            this.map.setView(this.currentPosition, 15);
+
+            console.log(`📍 [RESTAURACIÓN] Vehículo posicionado en última ubicación: (${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)})`);
+            console.log(`⚡ [RESTAURACIÓN] Velocidad: ${lastSpeed} km/h | Combustible: ${lastFuel}%`);
+
+            // Mostrar estadísticas del rastro
+            const traceLatLngs = this.tracePolyline.getLatLngs() as L.LatLng[];
+            console.log(`📊 [RESTAURACIÓN] Puntos en el rastro optimizado: ${traceLatLngs.length}`);
+
+            resolve({
+              restored: true,
+              lastPosition,
+              lastSpeed,
+              lastFuel
+            });
+          } else {
+            resolve({ restored: false });
+          }
+        },
+        error: (err) => {
+          console.error('❌ [RESTAURACIÓN] Error al cargar historial:', err);
+          resolve({ restored: false });
+        }
+      });
+
+      this.subscriptions.push(sub);
+    });
+  }
+
+  private async loadInitialData(): Promise<void> {
+    // 1️⃣ PRIMERO: Restaurar historial del recorrido (si existe)
+    console.log('🔄 [INIT] Iniciando carga de datos...');
+
+    const restoredState = await this.restoreRouteHistory();
+
+    // 2️⃣ DESPUÉS: Obtener datos actuales del API
     const sub = this.telemetryService.getLatestTelemetry(this.vehicleId).subscribe({
       next: (data) => {
         if (data) {
           // Asignar datos para la tarjeta
           this.renterName = data.renterName ?? 'No disponible';
 
-          // ✅ REDONDEO A ENTERO (sin decimales) - Valores iniciales
-          this.currentSpeed = Math.floor(data.speed);
-          this.currentFuel = Math.floor(data.fuelLevel);
+          if (restoredState.restored) {
+            // ✅ RESTAURACIÓN EXITOSA: Usar datos del historial
+            console.log('✨ [INIT] Usando estado restaurado del historial');
 
-          // Inicializar valores temporales con los mismos valores
+            this.currentSpeed = restoredState.lastSpeed || Math.floor(data.speed);
+            this.currentFuel = restoredState.lastFuel || Math.floor(data.fuelLevel);
+
+            // La posición ya fue establecida por restoreRouteHistory
+            // currentPosition ya tiene el valor correcto
+
+            console.log(`📍 [INIT] Continuando desde posición restaurada: (${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)})`);
+          } else {
+            // ⚠️ SIN HISTORIAL: Usar datos del API
+            console.log('🆕 [INIT] No hay historial, usando datos del API');
+
+            this.currentSpeed = Math.floor(data.speed);
+            this.currentFuel = Math.floor(data.fuelLevel);
+
+            if (data.latitude && data.longitude) {
+              this.currentPosition = { lat: data.latitude, lng: data.longitude };
+              this.previousPosition = { ...this.currentPosition };
+              this.vehicleMarker.setLatLng(this.currentPosition);
+              this.map.setView(this.currentPosition, 15);
+
+              console.log(`📍 [INIT] Vehículo ubicado en posición inicial: (${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)})`);
+            }
+          }
+
+          // Inicializar valores temporales con los valores actuales
           this.tempSpeed = this.currentSpeed;
           this.tempFuel = this.currentFuel;
 
           this.vehicleState = this.currentSpeed > 0 ? 'Moviéndose' : 'Detenido';
 
-          if (data.latitude && data.longitude) {
-            this.currentPosition = { lat: data.latitude, lng: data.longitude };
-            this.previousPosition = { ...this.currentPosition };
-            this.vehicleMarker.setLatLng(this.currentPosition);
-            this.map.setView(this.currentPosition, 15);
-            console.log(`📍 [FRONTEND] Vehículo ubicado en: ${this.currentPosition.lat}, ${this.currentPosition.lng}`);
+          // Inicializar timers de actualización de UI y guardado
+          this.lastUIUpdateTime = performance.now();
+          this.lastSaveTime = performance.now();
+          this.nextUIUpdateDelay = 1000 + Math.random() * 1000; // 1-2 segundos
 
-            // Inicializar timer de actualización de UI
-            this.lastUIUpdateTime = performance.now();
-            this.nextUIUpdateDelay = 1000 + Math.random() * 1000; // 1-2 segundos
+          console.log(`⚙️ [INIT] Estado inicial: Velocidad=${this.currentSpeed} km/h, Combustible=${this.currentFuel}%`);
 
-            // 2. Iniciar ruta de prueba (Simulación)
-            this.startRouteSimulation();
-          }
+          // 3️⃣ FINALMENTE: Iniciar simulación desde la posición actual (restaurada o del API)
+          console.log('🚀 [INIT] Iniciando simulación continua...');
+          this.startRouteSimulation();
         }
+      },
+      error: (err) => {
+        console.error('❌ [INIT] Error al obtener datos del API:', err);
       }
     });
     this.subscriptions.push(sub);
@@ -235,19 +368,19 @@ export class TrackingComponent implements OnInit, OnDestroy {
   }
 
   private drawRoute(routePoints: LatLng[]): void {
-    if (this.routePolyline) this.routePolyline.remove();
+    // ❌ YA NO DIBUJAMOS LA RUTA ANTICIPADA (eliminado para efecto snake)
+    // El usuario NO debe ver el futuro, solo el rastro dejado por el vehículo
 
-    // Convertir a formato Leaflet [lat, lng]
-    const latLngs = routePoints.map(p => [p.lat, p.lng] as [number, number]);
+    // ✅ Opcional: Ajustar vista del mapa para seguir al vehículo
+    // (Comentado para mantener vista estable, pero se puede activar si se desea)
+    /*
+    if (routePoints.length > 0) {
+      const bounds = L.latLngBounds(routePoints.map(p => [p.lat, p.lng] as [number, number]));
+      this.map.fitBounds(bounds);
+    }
+    */
 
-    this.routePolyline = L.polyline(latLngs, {
-      color: 'blue',
-      weight: 4,
-      opacity: 0.7
-    }).addTo(this.map);
-
-    // Ajustar mapa para ver toda la ruta
-    this.map.fitBounds(this.routePolyline.getBounds());
+    console.log(`📍 [FRONTEND] Nueva ruta cargada con ${routePoints.length} puntos (no se dibuja anticipadamente)`);
   }
 
   /**
@@ -272,6 +405,144 @@ export class TrackingComponent implements OnInit, OnDestroy {
 
   private deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
+  }
+
+  /**
+   * Calcula el ángulo (bearing) entre dos puntos en grados (0-360)
+   * @param lat1 Latitud del punto 1
+   * @param lng1 Longitud del punto 1
+   * @param lat2 Latitud del punto 2
+   * @param lng2 Longitud del punto 2
+   * @returns Ángulo en grados (0-360)
+   */
+  private calculateBearing(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const dLng = this.deg2rad(lng2 - lng1);
+    const lat1Rad = this.deg2rad(lat1);
+    const lat2Rad = this.deg2rad(lat2);
+
+    const y = Math.sin(dLng) * Math.cos(lat2Rad);
+    const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) -
+              Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLng);
+
+    const bearing = Math.atan2(y, x);
+    // Convertir de radianes a grados y normalizar a 0-360
+    return (bearing * 180 / Math.PI + 360) % 360;
+  }
+
+  /**
+   * Calcula la diferencia angular entre dos bearings (0-180 grados)
+   * @param bearing1 Primer ángulo en grados
+   * @param bearing2 Segundo ángulo en grados
+   * @returns Diferencia angular absoluta (0-180)
+   */
+  private getAngleDifference(bearing1: number, bearing2: number): number {
+    let diff = Math.abs(bearing1 - bearing2);
+    // Normalizar para que siempre sea el ángulo más pequeño
+    if (diff > 180) {
+      diff = 360 - diff;
+    }
+    return diff;
+  }
+
+  /**
+   * 🚀 OPTIMIZACIÓN INTELIGENTE: Agrega punto al rastro con fusión de colineales
+   * - Filtro de distancia mínima (5m) para eliminar ruido
+   * - Fusión de puntos colineales (rectas) para optimizar rendimiento
+   * - Conserva puntos en curvas para suavidad visual
+   *
+   * @param newLat Latitud del nuevo punto
+   * @param newLng Longitud del nuevo punto
+   */
+  private addOptimizedPoint(newLat: number, newLng: number): void {
+    const traceLatLngs = this.tracePolyline.getLatLngs() as L.LatLng[];
+
+    // Si no hay puntos, agregar el primero
+    if (traceLatLngs.length === 0) {
+      this.tracePolyline.addLatLng([newLat, newLng]);
+      return;
+    }
+
+    const lastPoint = traceLatLngs[traceLatLngs.length - 1];
+
+    // ========== FILTRO 1: DISTANCIA MÍNIMA (5 metros) ==========
+    const distanceToLast = this.calculateDistance(
+      lastPoint.lat,
+      lastPoint.lng,
+      newLat,
+      newLng
+    );
+
+    if (distanceToLast < this.MIN_POINT_DISTANCE) {
+      // Ignorar punto por ruido (micro-movimiento)
+      return;
+    }
+
+    // ========== FILTRO 2: FUSIÓN DE COLINEALES (Simplificación por ángulo) ==========
+    if (traceLatLngs.length >= 2) {
+      const penultimatePoint = traceLatLngs[traceLatLngs.length - 2];
+
+      // Calcular bearing (ángulo) del segmento anterior
+      const previousBearing = this.calculateBearing(
+        penultimatePoint.lat,
+        penultimatePoint.lng,
+        lastPoint.lat,
+        lastPoint.lng
+      );
+
+      // Calcular bearing del nuevo segmento
+      const newBearing = this.calculateBearing(
+        lastPoint.lat,
+        lastPoint.lng,
+        newLat,
+        newLng
+      );
+
+      // Diferencia angular
+      const angleDiff = this.getAngleDifference(previousBearing, newBearing);
+
+      if (angleDiff < this.MAX_ANGLE_DIFFERENCE) {
+        // ✅ LÍNEA RECTA: Reemplazar último punto (extender segmento)
+        traceLatLngs[traceLatLngs.length - 1] = L.latLng(newLat, newLng);
+        this.tracePolyline.setLatLngs(traceLatLngs);
+        return;
+      }
+    }
+
+    // ✅ CURVA O CAMBIO DE DIRECCIÓN: Agregar nuevo punto
+    this.tracePolyline.addLatLng([newLat, newLng]);
+
+    // ========== OPTIMIZACIÓN: Limitar puntos totales ==========
+    const updatedLatLngs = this.tracePolyline.getLatLngs() as L.LatLng[];
+    if (updatedLatLngs.length > this.MAX_TRACE_POINTS) {
+      const pointsToRemove = updatedLatLngs.length - this.MAX_TRACE_POINTS;
+      const newLatLngs = updatedLatLngs.slice(pointsToRemove);
+      this.tracePolyline.setLatLngs(newLatLngs);
+      console.log(`🗑️ [OPTIMIZACIÓN] Eliminados ${pointsToRemove} puntos antiguos del rastro`);
+    }
+  }
+
+  /**
+   * 💾 PERSISTENCIA: Guarda el estado actual del vehículo en el servidor
+   * Fire-and-forget: No espera respuesta para no bloquear la animación
+   */
+  private saveCurrentState(): void {
+    const telemetryData = {
+      vehicleId: this.vehicleId,
+      latitude: this.currentPosition.lat,
+      longitude: this.currentPosition.lng,
+      speed: Math.floor(this.currentSpeed),
+      fuelLevel: Math.floor(this.currentFuel)
+    };
+
+    // Fire-and-forget: subscribe sin esperar respuesta
+    this.telemetryService.recordTelemetry(telemetryData).subscribe({
+      next: () => {
+        // Guardado exitoso (silencioso)
+      },
+      error: (err) => {
+        console.warn('⚠️ [PERSISTENCIA] Error al guardar estado (no crítico):', err);
+      }
+    });
   }
 
   /**
@@ -400,10 +671,27 @@ export class TrackingComponent implements OnInit, OnDestroy {
       console.log(`🔄 [UI UPDATE] Velocidad: ${this.currentSpeed} km/h | Combustible: ${this.currentFuel}%`);
     }
 
+    // ========== 💾 HEARTBEAT: GUARDAR ESTADO CADA 5 SEGUNDOS ==========
+    const timeSinceLastSave = now - this.lastSaveTime;
+
+    if (timeSinceLastSave >= 5000) {
+      // Guardar estado actual en el servidor
+      this.saveCurrentState();
+      this.lastSaveTime = now;
+      console.log(`💾 [HEARTBEAT] Estado guardado: Pos(${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)}) | Vel: ${this.currentSpeed} km/h | Combustible: ${this.currentFuel}%`);
+    }
+
     // ========== ACTUALIZAR POSICIÓN DEL MARCADOR (SUAVE EN CADA FRAME) ==========
     this.vehicleMarker.setLatLng([interpolatedLat, interpolatedLng]);
     this.previousPosition = { lat: interpolatedLat, lng: interpolatedLng };
     this.currentPosition = { lat: interpolatedLat, lng: interpolatedLng };
+
+    // ========== 🐍 EFECTO SNAKE OPTIMIZADO: Agregar punto con fusión inteligente ==========
+    // Usa método optimizado que:
+    // - Ignora puntos con movimiento < 5m (ruido)
+    // - Fusiona puntos colineales (rectas)
+    // - Conserva puntos en curvas
+    this.addOptimizedPoint(interpolatedLat, interpolatedLng);
 
     // Si terminó este segmento, pasar al siguiente
     if (progress >= 1.0) {
