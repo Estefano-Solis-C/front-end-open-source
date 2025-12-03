@@ -20,6 +20,8 @@ export class VehicleFormComponent implements OnInit {
   isEditMode = false;
   currentOwnerId: number | null = null;
   currentVehicleId: number | null = null;
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -33,8 +35,7 @@ export class VehicleFormComponent implements OnInit {
       brand: ['', Validators.required],
       model: ['', Validators.required],
       year: ['', [Validators.required, Validators.min(2000)]],
-      pricePerDay: ['', [Validators.required, Validators.min(1)]],
-      imageUrl: ['', Validators.required]
+      pricePerDay: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -47,32 +48,56 @@ export class VehicleFormComponent implements OnInit {
 
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      // EDIT MODE
       this.isEditMode = true;
       this.currentVehicleId = Number(idParam);
 
       this.vehicleService.getVehicle(this.currentVehicleId).subscribe(vehicle => {
-        // Ensure current user owns the vehicle
         if (vehicle.ownerId === this.currentOwnerId) {
           this.vehicleForm.patchValue(vehicle);
+          if (vehicle.imageUrl) {
+            this.imagePreviewUrl = vehicle.imageUrl;
+          }
         } else {
           alert('No tienes permiso para editar este vehículo.');
           this.router.navigate(['/my-vehicles']);
         }
       });
     } else {
-      // CREATE MODE
       this.isEditMode = false;
     }
   }
 
-  onSubmit() {
+  /**
+   * @summary Handles file selection from the input and generates a preview
+   * @param event - The file input change event
+   */
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreviewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  /**
+   * @summary Handles form submission for both create and update operations
+   */
+  onSubmit(): void {
     if (this.vehicleForm.invalid || this.currentOwnerId === null) return;
+
+    if (!this.isEditMode && !this.selectedFile) {
+      alert(this.translate.instant('ERRORS.VEHICLE.IMAGE_REQUIRED') || 'Please select an image for the vehicle.');
+      return;
+    }
 
     const formValue = this.vehicleForm.value;
 
     if (this.isEditMode && this.currentVehicleId) {
-      // UPDATE LOGIC
       const vehicleData = new Vehicle(
         this.currentVehicleId,
         formValue.brand,
@@ -80,7 +105,7 @@ export class VehicleFormComponent implements OnInit {
         formValue.year,
         formValue.pricePerDay,
         'available',
-        formValue.imageUrl,
+        this.imagePreviewUrl || '',
         this.currentOwnerId
       );
 
@@ -89,7 +114,6 @@ export class VehicleFormComponent implements OnInit {
         this.router.navigate(['/my-vehicles']);
       });
     } else {
-      // CREATE LOGIC
       const vehicleData = new Vehicle(
         Date.now(),
         formValue.brand,
@@ -97,11 +121,11 @@ export class VehicleFormComponent implements OnInit {
         formValue.year,
         formValue.pricePerDay,
         'available',
-        formValue.imageUrl,
+        '',
         this.currentOwnerId
       );
 
-      this.vehicleService.createVehicle(vehicleData).subscribe(() => {
+      this.vehicleService.createVehicle(vehicleData, this.selectedFile || undefined).subscribe(() => {
         alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
         this.router.navigate(['/my-vehicles']);
       });

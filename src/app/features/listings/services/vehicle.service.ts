@@ -71,16 +71,36 @@ export class VehicleService {
     );
   }
 
-  /** @summary Create a new vehicle */
-  createVehicle(vehicle: Vehicle): Observable<Vehicle> {
-    const dto = VehicleAssembler.toDto(vehicle);
-    return this.http.post<VehicleDto>(this.apiUrl, dto).pipe(
-      map(newDto => VehicleAssembler.toModel(newDto)),
-      catchError(err => {
-        this.notifier.showError('ERRORS.VEHICLE.CREATE_FAILED');
-        return throwError(() => err);
-      })
-    );
+  /**
+   * @summary Create a new vehicle with optional image file upload
+   * @param vehicle - The vehicle domain model
+   * @param imageFile - Optional image file to upload
+   * @returns Observable of the created vehicle
+   */
+  createVehicle(vehicle: Vehicle, imageFile?: File): Observable<Vehicle> {
+    if (imageFile) {
+      const formData = new FormData();
+      const dto = VehicleAssembler.toDto(vehicle);
+      formData.append('resource', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+      formData.append('image', imageFile);
+
+      return this.http.post<VehicleDto>(this.apiUrl, formData).pipe(
+        map(newDto => VehicleAssembler.toModel(newDto)),
+        catchError(err => {
+          this.notifier.showError('ERRORS.VEHICLE.CREATE_FAILED');
+          return throwError(() => err);
+        })
+      );
+    } else {
+      const dto = VehicleAssembler.toDto(vehicle);
+      return this.http.post<VehicleDto>(this.apiUrl, dto).pipe(
+        map(newDto => VehicleAssembler.toModel(newDto)),
+        catchError(err => {
+          this.notifier.showError('ERRORS.VEHICLE.CREATE_FAILED');
+          return throwError(() => err);
+        })
+      );
+    }
   }
 
   /** @summary Update a vehicle */

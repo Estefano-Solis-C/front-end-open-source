@@ -175,6 +175,9 @@
     "BRAND": "Brand",
     "MODEL": "Model",
     "IMAGE_URL": "Image URL",
+    "IMAGE_FILE": "Vehicle Image",
+    "IMAGE_REQUIRED_HINT": "Please select an image file (JPG, PNG, etc.)",
+    "IMAGE_PREVIEW": "Image Preview",
     "PUBLISH_VEHICLE": "Publish Vehicle",
     "PUBLISH_SUCCESS": "Vehicle published successfully!"
   },
@@ -218,7 +221,8 @@
       "CREATE_FAILED": "We couldn't create the vehicle. Please try again.",
       "UPDATE_FAILED": "We couldn't update the vehicle. Please try again.",
       "MY_VEHICLES_FETCH_FAILED": "We couldn't load your vehicles. Please try again.",
-      "DELETE_FAILED": "We couldn't delete the vehicle. Please try again."
+      "DELETE_FAILED": "We couldn't delete the vehicle. Please try again.",
+      "IMAGE_REQUIRED": "Please select an image for the vehicle."
     },
     "BOOKING": {
       "LIST_FETCH_FAILED": "We couldn't load your bookings. Please try again.",

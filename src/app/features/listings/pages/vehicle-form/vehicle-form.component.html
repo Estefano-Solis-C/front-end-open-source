@@ -18,8 +18,20 @@
       <input type="number" id="pricePerDay" formControlName="pricePerDay">
     </div>
     <div class="form-group">
-      <label for="imageUrl">{{ 'VEHICLE_FORM.IMAGE_URL' | translate }}</label>
-      <input type="text" id="imageUrl" formControlName="imageUrl">
+      <label for="imageFile">{{ 'VEHICLE_FORM.IMAGE_FILE' | translate }}</label>
+      <input
+        type="file"
+        id="imageFile"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        [required]="!isEditMode">
+      <small *ngIf="!isEditMode" class="form-hint">{{ 'VEHICLE_FORM.IMAGE_REQUIRED_HINT' | translate }}</small>
+    </div>
+    <div class="form-group" *ngIf="imagePreviewUrl">
+      <label>{{ 'VEHICLE_FORM.IMAGE_PREVIEW' | translate }}</label>
+      <div class="image-preview-container">
+        <img [src]="imagePreviewUrl" alt="Vehicle preview" class="image-preview">
+      </div>
     </div>
     <div class="button-container">
       <button type="submit" class="submit-button" [disabled]="vehicleForm.invalid">

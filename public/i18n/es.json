@@ -175,6 +175,9 @@
     "BRAND": "Marca",
     "MODEL": "Modelo",
     "IMAGE_URL": "URL de la Imagen",
+    "IMAGE_FILE": "Imagen del Vehículo",
+    "IMAGE_REQUIRED_HINT": "Por favor selecciona un archivo de imagen (JPG, PNG, etc.)",
+    "IMAGE_PREVIEW": "Vista Previa de la Imagen",
     "PUBLISH_VEHICLE": "Publicar Vehículo",
     "PUBLISH_SUCCESS": "¡Vehículo publicado con éxito!"
   },
@@ -218,7 +221,8 @@
       "CREATE_FAILED": "No pudimos crear el vehículo. Inténtalo nuevamente.",
       "UPDATE_FAILED": "No pudimos actualizar el vehículo. Inténtalo nuevamente.",
       "MY_VEHICLES_FETCH_FAILED": "No pudimos cargar tus vehículos. Inténtalo nuevamente.",
-      "DELETE_FAILED": "No pudimos eliminar el vehículo. Inténtalo nuevamente."
+      "DELETE_FAILED": "No pudimos eliminar el vehículo. Inténtalo nuevamente.",
+      "IMAGE_REQUIRED": "Por favor selecciona una imagen para el vehículo."
     },
     "BOOKING": {
       "LIST_FETCH_FAILED": "No pudimos cargar tus reservas. Inténtalo nuevamente.",
