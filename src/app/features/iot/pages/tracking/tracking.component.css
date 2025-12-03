@@ -306,3 +306,45 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
 }
 
+/* Estilos personalizados para el tooltip del vehículo (estilo Folium) */
+:host ::ng-deep .vehicle-tooltip {
+  background: white !important;
+  border: 2px solid #2196F3 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3) !important;
+  padding: 0 !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+:host ::ng-deep .vehicle-tooltip::before {
+  border-top-color: #2196F3 !important;
+}
+
+:host ::ng-deep .leaflet-tooltip-top::before {
+  border-top-color: #2196F3 !important;
+}
+
+:host ::ng-deep .leaflet-tooltip {
+  animation: tooltipFadeIn 0.3s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo moderno para la polyline (equivalente a folium.GeoJson) */
+:host ::ng-deep .leaflet-interactive {
+  transition: opacity 0.3s ease;
+}
+
+:host ::ng-deep .leaflet-interactive:hover {
+  opacity: 1 !important;
+  cursor: pointer;
+}
