@@ -1,19 +1,51 @@
-<h1>Monitoreo del Vehículo</h1>
-<div class="tracking-container" *ngIf="telemetry; else loading">
-  <div class="map-placeholder">
-    <p>Simulación de Mapa</p>
-    <div class="car-marker">🚗</div>
-  </div>
-  <div class="info-card">
-    <h2>Información en Tiempo Real</h2>
-    <p><strong>Vehículo ID:</strong> {{ telemetry.vehicleId }}</p>
-    <p><strong>Latitud:</strong> {{ telemetry.latitude }}</p>
-    <p><strong>Longitud:</strong> {{ telemetry.longitude }}</p>
-    <p><strong>Velocidad:</strong> {{ telemetry.speed }} km/h</p>
-    <p><strong>Nivel de combustible:</strong> {{ telemetry.fuelLevel }} %</p>
-    <p><strong>Hora:</strong> {{ telemetry.timestamp }}</p>
+<div class="tracking-page">
+  <h1 class="page-title">🚗 Simulación Autónoma de Vehículo en Tiempo Real</h1>
+
+  <div class="tracking-container">
+    <!-- Mapa de Leaflet -->
+    <div class="map-section">
+      <div id="map" class="map-container"></div>
+    </div>
+
+    <!-- Tarjeta de Información -->
+    <div class="info-card">
+      <h2>📊 Información del Vehículo</h2>
+
+      <div class="info-item">
+        <span class="info-label">👤 Conductor:</span>
+        <span class="info-value">{{ renterName }}</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">📍 Estado:</span>
+        <span class="info-value status"
+              [class.moving]="vehicleState === 'Moviéndose'"
+              [class.stopped]="vehicleState === 'Detenido'">
+          {{ vehicleState }}
+        </span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">🚀 Velocidad:</span>
+        <span class="info-value speed">{{ currentSpeed }} km/h</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">⛽ Combustible:</span>
+        <span class="info-value fuel"
+              [class.low-fuel]="currentFuel <= 20"
+              [class.critical-fuel]="currentFuel <= 10">
+          {{ currentFuel.toFixed(1) }}%
+        </span>
+      </div>
+
+      <div class="info-description">
+        <p class="auto-mode">🤖 Modo Autónomo Activo</p>
+        <p class="simulation-info">
+          El vehículo se mueve automáticamente por Lima,
+          deteniéndose cada 5 segundos antes de continuar hacia un nuevo destino aleatorio.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
-<ng-template #loading>
-  <p>Cargando datos de telemetría...</p>
-</ng-template>
