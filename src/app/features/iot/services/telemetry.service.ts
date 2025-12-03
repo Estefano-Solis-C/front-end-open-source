@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { Telemetry } from '../models/telemetry.model';
 import { environment } from '../../../../environments/environment';
 
-export interface RouteResponse {
-  route: Array<{ lat: number; lng: number }>;
+interface RouteCoordinate {
+  lat: number;
+  lng: number;
 }
 
 @Injectable({
@@ -44,15 +45,14 @@ export class TelemetryService {
    * @param endLng Longitud de destino
    * @returns Observable con la ruta simulada (array de coordenadas)
    */
-  getSimulationRoute(startLat: number, startLng: number, endLat: number, endLng: number): Observable<RouteResponse> {
-    // Construir parámetros de consulta
+  getSimulationRoute(startLat: number, startLng: number, endLat: number, endLng: number): Observable<RouteCoordinate[]> {
     const params = new HttpParams()
       .set('startLat', startLat.toString())
       .set('startLng', startLng.toString())
       .set('endLat', endLat.toString())
       .set('endLng', endLng.toString());
 
-    // Hacer petición GET con parámetros en query string
-    return this.http.get<RouteResponse>(`${this.simulationUrl}/route`, { params });
+    // Esperamos un array, no un objeto envuelto
+    return this.http.get<RouteCoordinate[]>(`${this.simulationUrl}/route`, { params });
   }
 }
