@@ -98,19 +98,8 @@ export class VehicleFormComponent implements OnInit {
     const formValue = this.vehicleForm.value;
 
     if (this.isEditMode && this.currentVehicleId) {
-      const vehicleData = new Vehicle(
-        this.currentVehicleId,
-        formValue.brand,
-        formValue.model,
-        formValue.year,
-        formValue.pricePerDay,
-        'available',
-        this.imagePreviewUrl || '',
-        this.currentOwnerId
-      );
-
-      // Pass selectedFile if user selected a new image, otherwise undefined to keep existing image
-      this.vehicleService.updateVehicle(vehicleData, this.selectedFile || undefined).subscribe(() => {
+      // Usar el nuevo método update() con FormData y imagen opcional
+      this.vehicleService.update(this.currentVehicleId, this.vehicleForm.value, this.selectedFile || undefined).subscribe(() => {
         alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
         this.router.navigate(['/my-vehicles']);
       });
