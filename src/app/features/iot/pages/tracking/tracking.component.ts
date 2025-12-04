@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as L from 'leaflet';
 import { TelemetryService } from '../../services/telemetry.service';
+import { VehicleService } from '../../../listings/services/vehicle.service';
+import Vehicle from '../../../listings/models/vehicle.model';
 import { Subscription } from 'rxjs';
 
 interface LatLng { lat: number; lng: number; }
@@ -32,13 +34,18 @@ export class TrackingComponent implements OnInit, OnDestroy {
   currentPosition: LatLng = { lat: -12.0464, lng: -77.0428 };
   private previousPosition: LatLng = { lat: -12.0464, lng: -77.0428 };
 
+  // Información del vehículo
+  private vehicle: Vehicle | null = null;
+  private isVehicleParked: boolean = false; // true si está 'available', false si está 'rented'
+
   // Propiedades públicas usadas por el template
   renterName: string = 'No disponible';
   currentSpeed: number = 0;
   currentFuel: number = 100;
-  vehicleState: 'Moviéndose' | 'Detenido' | 'Repostando' = 'Detenido';
+  vehicleState: 'Moviéndose' | 'Detenido' | 'Repostando' | 'Estacionado' = 'Detenido';
   get statusColor(): string {
     if (this.vehicleState === 'Repostando') return '#FF9800';
+    if (this.vehicleState === 'Estacionado') return '#FFA726'; // Naranja para estacionado
     return (this.vehicleState === 'Moviéndose' || this.currentSpeed > 0) ? '#4CAF50' : '#f44336';
   }
 
@@ -72,17 +79,16 @@ export class TrackingComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private telemetryService: TelemetryService
+    private telemetryService: TelemetryService,
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.vehicleId = id ? Number(id) : 1;
 
-    setTimeout(() => {
-      this.initializeMap();
-      this.loadInitialData();
-    }, 100);
+    // ✅ NUEVO: Obtener información del vehículo ANTES de inicializar el mapa
+    this.loadVehicleInfo();
   }
 
   ngOnDestroy(): void {
@@ -133,33 +139,65 @@ export class TrackingComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el tooltip del vehículo con valores formateados (números enteros)
+   * 🅿️ MODIFICADO: Muestra información diferente si el vehículo está estacionado
    */
   private updateVehicleTooltip(): void {
-    const tooltipContent = `
-      <div style="font-family: Arial, sans-serif; padding: 8px; min-width: 180px;">
-        <h4 style="margin: 0 0 8px 0; color: #1976D2; font-size: 14px; border-bottom: 2px solid #2196F3; padding-bottom: 4px;">
-          🚗 Vehículo ${this.vehicleId}
-        </h4>
-        <div style="margin: 6px 0; font-size: 12px;">
-          <strong>👤 Conductor:</strong><br/>
-          <span style="color: #333;">${this.renterName}</span>
+    // Información del vehículo (marca y modelo si está disponible)
+    const vehicleInfo = this.vehicle
+      ? `${this.vehicle.brand} ${this.vehicle.model}`
+      : `Vehículo ${this.vehicleId}`;
+
+    let tooltipContent: string;
+
+    if (this.isVehicleParked) {
+      // 🅿️ TOOLTIP PARA VEHÍCULO ESTACIONADO (disponible para renta)
+      tooltipContent = `
+        <div style="font-family: Arial, sans-serif; padding: 8px; min-width: 180px;">
+          <h4 style="margin: 0 0 8px 0; color: #FF9800; font-size: 14px; border-bottom: 2px solid #FFA726; padding-bottom: 4px;">
+            🅿️ ${vehicleInfo}
+          </h4>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>📊 Estado:</strong>
+            <span style="color: #FF9800; font-weight: bold;">Estacionado</span>
+          </div>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>ℹ️ Información:</strong><br/>
+            <span style="color: #666;">Disponible para renta</span>
+          </div>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>💵 Precio:</strong>
+            <span style="color: #4CAF50; font-weight: bold;">S/ ${this.vehicle?.pricePerDay || 0}/día</span>
+          </div>
         </div>
-        <div style="margin: 6px 0; font-size: 12px;">
-          <strong>🚀 Velocidad:</strong>
-          <span style="color: #2196F3; font-weight: bold;">${Math.round(this.currentSpeed)} km/h</span>
+      `;
+    } else {
+      // 🚗 TOOLTIP PARA VEHÍCULO EN MOVIMIENTO (rentado)
+      tooltipContent = `
+        <div style="font-family: Arial, sans-serif; padding: 8px; min-width: 180px;">
+          <h4 style="margin: 0 0 8px 0; color: #1976D2; font-size: 14px; border-bottom: 2px solid #2196F3; padding-bottom: 4px;">
+            🚗 ${vehicleInfo}
+          </h4>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>👤 Conductor:</strong><br/>
+            <span style="color: #333;">${this.renterName}</span>
+          </div>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>🚀 Velocidad:</strong>
+            <span style="color: #2196F3; font-weight: bold;">${Math.round(this.currentSpeed)} km/h</span>
+          </div>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>⛽ Gasolina:</strong>
+            <span style="color: ${this.currentFuel > 20 ? '#4CAF50' : '#f44336'}; font-weight: bold;">
+              ${Math.round(this.currentFuel)}%
+            </span>
+          </div>
+          <div style="margin: 6px 0; font-size: 12px;">
+            <strong>📊 Estado:</strong>
+            <span style="color: ${this.statusColor}; font-weight: bold;">${this.vehicleState}</span>
+          </div>
         </div>
-        <div style="margin: 6px 0; font-size: 12px;">
-          <strong>⛽ Gasolina:</strong>
-          <span style="color: ${this.currentFuel > 20 ? '#4CAF50' : '#f44336'}; font-weight: bold;">
-            ${Math.round(this.currentFuel)}%
-          </span>
-        </div>
-        <div style="margin: 6px 0; font-size: 12px;">
-          <strong>📊 Estado:</strong>
-          <span style="color: ${this.statusColor}; font-weight: bold;">${this.vehicleState}</span>
-        </div>
-      </div>
-    `;
+      `;
+    }
 
     this.vehicleMarker.bindTooltip(tooltipContent, {
       permanent: false,
@@ -260,9 +298,57 @@ export class TrackingComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 🚗 NUEVO: Obtiene información del vehículo para determinar si debe animarse o estar estático
+   * - Si status === 'available': Vehículo estacionado (NO animar)
+   * - Si status === 'rented': Vehículo en movimiento (SÍ animar)
+   */
+  private loadVehicleInfo(): void {
+    console.log(`🔍 [INIT] Obteniendo información del vehículo ID: ${this.vehicleId}`);
+
+    const sub = this.vehicleService.getVehicle(this.vehicleId).subscribe({
+      next: (vehicle) => {
+        this.vehicle = vehicle;
+        this.isVehicleParked = vehicle.status === 'available';
+
+        console.log(`🚗 [INIT] Vehículo cargado: ${vehicle.brand} ${vehicle.model}`);
+        console.log(`📊 [INIT] Estado del vehículo: ${vehicle.status}`);
+        console.log(`🅿️ [INIT] ¿Estacionado?: ${this.isVehicleParked ? 'SÍ' : 'NO'}`);
+
+        if (this.isVehicleParked) {
+          console.log('⚠️ [INIT] Vehículo disponible - Mostrando como ESTACIONADO (sin animación)');
+          this.vehicleState = 'Estacionado';
+        } else {
+          console.log('✅ [INIT] Vehículo rentado - Iniciando ANIMACIÓN de movimiento');
+        }
+
+        // Inicializar mapa después de obtener información del vehículo
+        setTimeout(() => {
+          this.initializeMap();
+          this.loadInitialData();
+        }, 100);
+      },
+      error: (err) => {
+        console.warn('⚠️ [INIT] No se pudo obtener información del vehículo. Continuando con valores por defecto...', err);
+
+        // Si falla, asumir que está disponible (estacionado) por seguridad
+        this.isVehicleParked = true;
+        this.vehicleState = 'Estacionado';
+
+        setTimeout(() => {
+          this.initializeMap();
+          this.loadInitialData();
+        }, 100);
+      }
+    });
+
+    this.subscriptions.push(sub);
+  }
+
+  /**
    * Loads initial data for the tracking component.
    * First restores route history if available, then fetches latest telemetry.
    * If telemetry is not found (404), initializes with random position and starts simulation.
+   * 🚗 MODIFICADO: Solo inicia simulación si el vehículo NO está estacionado
    */
   private async loadInitialData(): Promise<void> {
     console.log('🔄 [INIT] Iniciando carga de datos...');
@@ -307,8 +393,18 @@ export class TrackingComponent implements OnInit, OnDestroy {
           this.nextUIUpdateDelay = 1000 + Math.random() * 1000; // 1-2 segundos
 
           console.log(`⚙️ [INIT] Estado inicial: Velocidad=${this.currentSpeed} km/h, Combustible=${this.currentFuel}%`);
-          console.log('🚀 [INIT] Iniciando simulación continua...');
-          this.startRouteSimulation();
+
+          // ✅ VERIFICACIÓN: Solo iniciar simulación si el vehículo NO está estacionado
+          if (this.isVehicleParked) {
+            console.log('🅿️ [INIT] Vehículo ESTACIONADO (disponible) - NO se inicia animación');
+            this.vehicleState = 'Estacionado';
+            this.currentSpeed = 0;
+            this.tempSpeed = 0;
+            this.updateVehicleTooltip();
+          } else {
+            console.log('🚀 [INIT] Vehículo RENTADO - Iniciando simulación continua...');
+            this.startRouteSimulation();
+          }
         }
       },
       error: (err) => {
@@ -331,7 +427,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
           this.tempSpeed = 0;
           this.tempFuel = 100;
           this.renterName = 'No disponible';
-          this.vehicleState = 'Detenido';
 
           this.lastUIUpdateTime = performance.now();
           this.lastSaveTime = performance.now();
@@ -340,8 +435,14 @@ export class TrackingComponent implements OnInit, OnDestroy {
           console.log(`📍 [INIT] Vehículo nuevo posicionado en: (${this.currentPosition.lat.toFixed(4)}, ${this.currentPosition.lng.toFixed(4)})`);
           console.log(`⚙️ [INIT] Estado inicial: Velocidad=0 km/h, Combustible=100%`);
 
-          console.log('🚀 [INIT] Iniciando simulación automática para vehículo nuevo...');
-          this.startRouteSimulation();
+          // ✅ VERIFICACIÓN: Solo iniciar simulación si el vehículo NO está estacionado
+          if (this.isVehicleParked) {
+            console.log('🅿️ [INIT] Vehículo ESTACIONADO (disponible) - NO se inicia animación');
+            this.vehicleState = 'Estacionado';
+          } else {
+            console.log('🚀 [INIT] Vehículo RENTADO - Iniciando simulación automática...');
+            this.startRouteSimulation();
+          }
         } else {
           console.error('❌ [INIT] Error al obtener datos del API:', err);
         }
@@ -351,6 +452,12 @@ export class TrackingComponent implements OnInit, OnDestroy {
   }
 
   private startRouteSimulation(): void {
+    // ✅ PROTECCIÓN: No iniciar simulación si el vehículo está estacionado
+    if (this.isVehicleParked) {
+      console.log('🛑 [SIMULACIÓN] Vehículo estacionado - NO se genera nueva ruta');
+      return;
+    }
+
     const destLat = this.LIMA_BOUNDS.latMin + Math.random() * (this.LIMA_BOUNDS.latMax - this.LIMA_BOUNDS.latMin);
     const destLng = this.LIMA_BOUNDS.lngMin + Math.random() * (this.LIMA_BOUNDS.lngMax - this.LIMA_BOUNDS.lngMin);
 

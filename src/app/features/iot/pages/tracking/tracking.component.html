@@ -9,8 +9,20 @@
     </div>
 
     <div class="status-content">
-      <!-- Nombre del Arrendatario -->
-      <div class="status-item">
+      <!-- 🅿️ Mensaje informativo cuando el vehículo está estacionado -->
+      <div class="status-item" *ngIf="vehicleState === 'Estacionado'"
+           style="background: #FFF3E0; padding: 12px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #FF9800;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 24px;">🅿️</span>
+          <div>
+            <div style="font-weight: bold; color: #E65100; font-size: 14px;">Vehículo Estacionado</div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px;">Este vehículo está disponible para renta</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nombre del Arrendatario (solo si está rentado) -->
+      <div class="status-item" *ngIf="vehicleState !== 'Estacionado'">
         <span class="status-label">👤 Conductor:</span>
         <span class="status-value">{{ renterName }}</span>
       </div>
@@ -25,14 +37,14 @@
         </span>
       </div>
 
-      <!-- Velocidad -->
-      <div class="status-item">
+      <!-- Velocidad (ocultar si está estacionado) -->
+      <div class="status-item" *ngIf="vehicleState !== 'Estacionado'">
         <span class="status-label">🚀 Velocidad:</span>
         <span class="status-value speed-value">{{ currentSpeed }} km/h</span>
       </div>
 
-      <!-- Nivel de Gasolina -->
-      <div class="status-item">
+      <!-- Nivel de Gasolina (ocultar si está estacionado) -->
+      <div class="status-item" *ngIf="vehicleState !== 'Estacionado'">
         <span class="status-label">⛽ Gasolina:</span>
         <span class="status-value fuel-value"
               [class.low-fuel]="currentFuel <= 20"
@@ -44,14 +56,15 @@
       <!-- Información adicional -->
       <div class="status-item timestamp">
         <span class="status-label">🕐 Actualización:</span>
-        <span class="status-value">En tiempo real</span>
+        <span class="status-value">{{ vehicleState === 'Estacionado' ? 'Posición fija' : 'En tiempo real' }}</span>
       </div>
     </div>
 
     <!-- Indicador de estado visual -->
     <div class="status-indicator"
-         [class.moving]="currentSpeed > 0"
-         [class.stopped]="currentSpeed === 0">
+         [class.moving]="currentSpeed > 0 && vehicleState !== 'Estacionado'"
+         [class.stopped]="currentSpeed === 0 || vehicleState === 'Estacionado'"
+         [class.parked]="vehicleState === 'Estacionado'">
       <div class="pulse-dot"></div>
     </div>
   </div>
