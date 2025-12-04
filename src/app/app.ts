@@ -10,7 +10,6 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class App {
   constructor(private translate: TranslateService) {
-    // Bootstrap with Spanish by default; AuthService will override per-user preference
     this.translate.setDefaultLang('es');
     this.translate.use('es');
   }

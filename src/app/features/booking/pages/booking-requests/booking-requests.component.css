@@ -44,15 +44,14 @@
   color: white;
   text-transform: capitalize;
 }
-/* Estados clásicos (compatibilidad) */
+
 .card-status.activa { background-color: #007bff; }
 .card-status.finalizada { background-color: #6c757d; }
-/* Estados actuales del backend */
 .card-status.PENDING { background-color: #ffc107; color: #000; }
 .card-status.CONFIRMED { background-color: #28a745; }
 .card-status.REJECTED { background-color: #dc3545; }
 .card-status.CANCELLED { background-color: #6c757d; }
-/* Acciones (Aceptar / Rechazar) con estética similar a Monitorear / Editar */
+
 .card-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;

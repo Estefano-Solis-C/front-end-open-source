@@ -67,7 +67,6 @@ export class ReviewFormComponent implements OnInit {
         this.reviewForm.reset({ rating: 0, comment: '' });
       },
       error: (err: any) => {
-        console.error('Error posting review:', err);
         alert(this.translate.instant('REVIEW_FORM.ERROR_SUBMIT'));
       }
     });

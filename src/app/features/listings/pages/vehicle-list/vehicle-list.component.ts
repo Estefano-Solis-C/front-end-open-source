@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import Vehicle from '../../models/vehicle.model';
 import { VehicleService } from '../../services/vehicle.service';
 import { map } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core'; // Importar
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-vehicle-list',

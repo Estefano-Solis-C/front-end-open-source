@@ -4,25 +4,28 @@ import { Observable, forkJoin, map, switchMap, catchError, throwError } from 'rx
 import Vehicle from '../models/vehicle.model';
 import { VehicleDto } from '../models/vehicle.dto';
 import { VehicleAssembler } from '../assemblers/vehicle.assembler';
+import { UserService } from '../../iam/services/user.service';
 import { environment } from '../../../../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../shared/infrastructure/notification/notification.service';
-
-interface UserSummary { id: number; name: string; }
 
 @Injectable({
   providedIn: 'root'
 })
 export class VehicleService {
   private apiUrl = environment.BASE_URL + environment.ENDPOINT_PATH_VEHICLES;
-  private usersUrl = environment.BASE_URL + environment.ENDPOINT_PATH_USERS;
 
-  constructor(private http: HttpClient, private translate: TranslateService, private notifier: NotificationService) {}
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private translate: TranslateService,
+    private notifier: NotificationService
+  ) {}
 
   /** @summary Retrieve all vehicles with owner names */
   getVehicles(): Observable<Vehicle[]> {
     const vehicles$ = this.http.get<VehicleDto[]>(this.apiUrl);
-    const users$ = this.http.get<UserSummary[]>(this.usersUrl);
+    const users$ = this.userService.getUsers();
 
     return forkJoin({ vehicles: vehicles$, users: users$ }).pipe(
       map(({ vehicles, users }) =>
@@ -44,7 +47,7 @@ export class VehicleService {
   getVehicle(id: number): Observable<Vehicle> {
     return this.http.get<VehicleDto>(`${this.apiUrl}/${id}`).pipe(
       switchMap((vehicleDto: VehicleDto) =>
-        this.http.get<UserSummary[]>(this.usersUrl).pipe(
+        this.userService.getUsers().pipe(
           map(users => {
             const vehicleModel = VehicleAssembler.toModel(vehicleDto);
             const owner = users.find(u => u.id === vehicleModel.ownerId);
@@ -125,25 +128,6 @@ export class VehicleService {
         return throwError(() => err);
       })
     );
-  }
-
-  /**
-   * @deprecated Use `update()` instead
-   * @summary Update a vehicle with optional image file upload
-   * @param vehicle - The vehicle domain model
-   * @param imageFile - Optional image file to upload (if not provided, keeps existing image)
-   * @returns Observable of the updated vehicle
-   */
-  updateVehicle(vehicle: Vehicle, imageFile?: File): Observable<Vehicle> {
-    const resource = {
-      brand: vehicle.brand,
-      model: vehicle.model,
-      year: vehicle.year,
-      pricePerDay: vehicle.pricePerDay,
-      status: vehicle.status,
-      ownerId: vehicle.ownerId
-    };
-    return this.update(vehicle.id, resource, imageFile);
   }
 
   /** @summary Delete a vehicle by id */

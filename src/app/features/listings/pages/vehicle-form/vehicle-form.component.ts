@@ -98,7 +98,6 @@ export class VehicleFormComponent implements OnInit {
     const formValue = this.vehicleForm.value;
 
     if (this.isEditMode && this.currentVehicleId) {
-      // Usar el nuevo método update() con FormData y imagen opcional
       this.vehicleService.update(this.currentVehicleId, this.vehicleForm.value, this.selectedFile || undefined).subscribe(() => {
         alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
         this.router.navigate(['/my-vehicles']);
@@ -134,7 +133,6 @@ export class VehicleFormComponent implements OnInit {
         this.router.navigate(['/my-vehicles']);
       },
       error: (err) => {
-        console.error('Error deleting vehicle', err);
         alert(this.translate.instant('VEHICLE.DELETE_ERROR') || 'Error al eliminar el vehículo. Intenta nuevamente.');
       }
     });

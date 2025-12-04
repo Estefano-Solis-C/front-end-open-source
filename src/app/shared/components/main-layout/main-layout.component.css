@@ -1,13 +1,13 @@
 .main-layout {
   display: flex;
-  position: relative; /* Needed for backdrop z-index */
+  position: relative;
 }
 
 .content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 280px; /* Sidebar width on desktop */
+  margin-left: 280px;
   width: calc(100% - 280px);
   transition: margin-left 0.3s ease-in-out;
 }
@@ -18,7 +18,6 @@
   flex-grow: 1;
 }
 
-/* Backdrop styles on mobile */
 .backdrop {
   position: fixed;
   top: 0;
@@ -26,18 +25,17 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999; /* Just below the sidebar */
-  display: none; /* Hidden by default */
+  z-index: 999;
+  display: none;
 }
 
 /* --- RESPONSIVE LOGIC --- */
 @media (max-width: 992px) {
   .content {
-    margin-left: 0; /* Full width content on mobile */
+    margin-left: 0;
     width: 100%;
   }
 
-  /* Show backdrop only on mobile when sidebar is visible */
   .backdrop {
     display: block;
   }

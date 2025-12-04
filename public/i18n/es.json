@@ -249,6 +249,20 @@
   "LISTINGS": {
     "UNKNOWN_OWNER": "Propietario Desconocido"
   },
+  "TRACKING": {
+    "TOOLTIP_PARKED_STATE": "Estacionado",
+    "TOOLTIP_AVAILABLE_FOR_RENT": "Disponible para renta",
+    "TOOLTIP_DRIVER": "Conductor",
+    "TOOLTIP_SPEED": "Velocidad",
+    "TOOLTIP_FUEL": "Gasolina",
+    "TOOLTIP_STATUS": "Estado",
+    "TOOLTIP_PRICE": "Precio",
+    "TOOLTIP_INFO": "Información",
+    "UNIT_KMH": "km/h",
+    "UNIT_PERCENT": "%",
+    "UNIT_PER_DAY": "/día",
+    "VEHICLE_LABEL": "Vehículo"
+  },
   "PUBLIC": {
     "PAGE_NOT_FOUND": {
       "TITLE": "Página no encontrada",

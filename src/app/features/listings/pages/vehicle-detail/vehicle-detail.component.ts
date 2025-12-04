@@ -33,7 +33,7 @@ export class VehicleDetailComponent implements OnInit {
     private translate: TranslateService,
     private authService: AuthService,
     private getMyBookings: GetMyBookingsUseCase,
-    private router: Router // added Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -77,7 +77,6 @@ export class VehicleDetailComponent implements OnInit {
         this.router.navigate(['/my-vehicles']);
       },
       error: (err) => {
-        console.error('Error deleting vehicle', err);
         alert(this.translate.instant('VEHICLE.DELETE_ERROR') || 'Error al eliminar el vehículo. Intenta nuevamente.');
       }
     });

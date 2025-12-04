@@ -108,7 +108,6 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         alert(this.translate.instant('PROFILE.UPDATE_PASSWORD_ERROR'));
-        console.error(err);
         this.passwordForm.controls['currentPassword'].setErrors({ invalid: true });
       }
     });

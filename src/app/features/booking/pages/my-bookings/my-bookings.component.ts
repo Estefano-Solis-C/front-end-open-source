@@ -17,7 +17,6 @@ import { BookingService } from '../../services/booking.service';
   styleUrls: ['./my-bookings.component.css']
 })
 export class MyBookingsComponent implements OnInit {
-  // Contains joined booking + vehicle info
   bookingsWithDetails: any[] = [];
   isLoading = true;
 
@@ -33,7 +32,6 @@ export class MyBookingsComponent implements OnInit {
       take(1),
       switchMap(user => {
         if (user && user.role === 'ROLE_RENTER') {
-          // Get renter bookings from backend (user derived from token)
           return this.getMyBookings.execute();
         }
         return of([]);
@@ -42,7 +40,6 @@ export class MyBookingsComponent implements OnInit {
         if (bookings.length === 0) {
           return of([]);
         }
-        // For each booking, fetch its vehicle details
         const vehicleRequests = bookings.map(booking =>
           this.vehicleService.getVehicle(booking.vehicleId).pipe(
             map(vehicle => ({
@@ -60,7 +57,6 @@ export class MyBookingsComponent implements OnInit {
     });
   }
 
-  // Computes date difference in days from today to endDate (clamped at 0)
   private calculateDaysRemaining(endDate: Date): number {
     const today = new Date();
     const end = new Date(endDate);
@@ -80,7 +76,6 @@ export class MyBookingsComponent implements OnInit {
         );
       },
       error: (err) => {
-        console.error('Failed to cancel booking', err);
       }
     });
   }

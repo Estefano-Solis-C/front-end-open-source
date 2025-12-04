@@ -1,15 +1,14 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from '../../services/booking.service';
 import { AuthService } from '../../../iam/services/auth.service';
+import { UserService } from '../../../iam/services/user.service';
 import { take, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { VehicleService } from '../../../listings/services/vehicle.service';
 import { Booking } from '../../models/booking.model';
 import Vehicle from '../../../listings/models/vehicle.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-booking-requests',
@@ -23,19 +22,15 @@ import { environment } from '../../../../../environments/environment';
  * It aggregates booking, vehicle and renter name for display.
  */
 export class BookingRequestsComponent implements OnInit {
-  // Cambiado: ahora cada item contiene la reserva, su vehículo y el nombre del arrendatario
   bookingRequests: { booking: Booking; vehicle: Vehicle; renterName: string }[] = [];
   isLoading = true;
-  // control simple de acciones en curso por bookingId
   processing: Record<number, boolean> = {};
-
-  private usersUrl = environment.BASE_URL + environment.ENDPOINT_PATH_USERS;
-  private http = inject(HttpClient);
 
   constructor(
     private bookingService: BookingService,
     private authService: AuthService,
     private vehicleService: VehicleService,
+    private userService: UserService,
     private translate: TranslateService
   ) {}
 
@@ -50,13 +45,13 @@ export class BookingRequestsComponent implements OnInit {
       forkJoin({
         requests: this.bookingService.getMyBookingRequests(),
         vehicles: this.vehicleService.getVehicles(),
-        users: this.http.get<any[]>(this.usersUrl)
+        users: this.userService.getUsers()
       })
         .pipe(
           map(({ requests, vehicles, users }) => {
             return (requests || []).map((booking: Booking) => {
               const vehicle = vehicles.find(v => v.id === booking.vehicleId)!;
-              const renter = users.find(u => u.id === booking.userId);
+              const renter = users.find((u: any) => u.id === booking.userId);
               return {
                 booking,
                 vehicle,
@@ -71,7 +66,6 @@ export class BookingRequestsComponent implements OnInit {
             this.isLoading = false;
           },
           error: err => {
-            console.error('Error cargando solicitudes', err);
             this.isLoading = false;
           }
         });
@@ -88,7 +82,6 @@ export class BookingRequestsComponent implements OnInit {
         this.processing[bookingId] = false;
       },
       error: err => {
-        console.error('Error confirmando reserva', err);
         alert(this.translate.instant('BOOKING_REQUESTS.CONFIRM_ERROR'));
         this.processing[bookingId] = false;
       }
@@ -105,7 +98,6 @@ export class BookingRequestsComponent implements OnInit {
         this.processing[bookingId] = false;
       },
       error: err => {
-        console.error('Error rechazando reserva', err);
         alert(this.translate.instant('BOOKING_REQUESTS.REJECT_ERROR'));
         this.processing[bookingId] = false;
       }

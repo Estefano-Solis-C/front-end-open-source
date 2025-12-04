@@ -9,11 +9,11 @@
   left: 0;
   height: 100vh;
   overflow-y: auto;
-  z-index: 1001; /* Higher than backdrop */
+  z-index: 1001;
   box-shadow: 4px 0 15px rgba(0, 20, 50, 0.1);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease-in-out; /* Smooth animation */
+  transition: transform 0.3s ease-in-out;
 }
 
 .logo {
@@ -73,16 +73,12 @@ li a.active svg {
   transform: scale(1.1);
 }
 
-/* --- RESPONSIVE LOGIC (fixed) --- */
 @media (max-width: 992px) {
   .sidebar {
-    /* Default: sidebar is hidden outside the viewport */
     transform: translateX(-100%);
   }
 }
 
-/* When the host element (<app-sidebar>) has the 'is-visible' class,
-   the nested '.sidebar' element will slide into view. */
 :host(.is-visible) .sidebar {
   transform: translateX(0);
 }

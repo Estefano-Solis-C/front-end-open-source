@@ -73,7 +73,6 @@ export class EditProfileComponent implements OnInit {
         this.router.navigate(['/profile']);
       },
       error: (err) => {
-        console.error('Error al actualizar la información:', err);
         alert(this.translate.instant('PROFILE.UPDATE_INFO_ERROR'));
       }
     });
@@ -93,7 +92,6 @@ export class EditProfileComponent implements OnInit {
       return;
     }
 
-    console.log('Cambiando contraseña...');
     alert(this.translate.instant('PROFILE.UPDATE_PASSWORD_SUCCESS'));
     this.passwordForm.reset();
   }

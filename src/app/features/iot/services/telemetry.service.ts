@@ -20,7 +20,7 @@ export interface TelemetryCreateDto {
   longitude: number;
   speed: number;
   fuelLevel: number;
-  timestamp?: string; // Optional, backend may generate it
+  timestamp?: string;
 }
 
 @Injectable({

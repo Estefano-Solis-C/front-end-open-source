@@ -21,12 +21,10 @@ export class LanguageSwitcherComponent implements OnInit, OnDestroy {
   private sub?: Subscription;
 
   constructor(private translate: TranslateService, private authService: AuthService) {
-    // Initialize with the current active language or default
     this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
   }
 
   ngOnInit(): void {
-    // Keep button state in sync when language changes elsewhere
     this.sub = this.translate.onLangChange.subscribe((e) => {
       this.currentLang = e.lang;
     });

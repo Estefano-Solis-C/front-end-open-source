@@ -101,7 +101,6 @@ export class BookingDetailComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.error('Error al cancelar la reserva:', err);
           alert(this.translate.instant('BOOKING_DETAIL.CANCEL_ERROR'));
         }
       });
@@ -128,7 +127,6 @@ export class BookingDetailComponent implements OnInit {
           this.router.navigate(['/my-bookings']);
         },
         error: (err) => {
-          console.error('Error al eliminar la reserva:', err);
           alert(this.translate.instant('BOOKING_DETAIL.DELETE_ERROR'));
         }
       });

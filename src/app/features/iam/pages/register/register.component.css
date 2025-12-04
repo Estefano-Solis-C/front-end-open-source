@@ -93,8 +93,6 @@ input:focus {
   text-decoration: none;
   font-weight: bold;
 }
-
-/* Estilos para selección de rol en Registro */
 .role-options {
   display: flex;
   flex-direction: column;
