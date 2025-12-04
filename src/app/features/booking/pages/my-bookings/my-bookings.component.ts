@@ -32,7 +32,7 @@ export class MyBookingsComponent implements OnInit {
     this.authService.currentUser$.pipe(
       take(1),
       switchMap(user => {
-        if (user && user.role === 'ROLE_ARRENDATARIO') {
+        if (user && user.role === 'ROLE_RENTER') {
           // Get renter bookings from backend (user derived from token)
           return this.getMyBookings.execute();
         }

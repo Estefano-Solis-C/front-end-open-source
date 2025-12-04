@@ -109,7 +109,8 @@ export class VehicleFormComponent implements OnInit {
         this.currentOwnerId
       );
 
-      this.vehicleService.updateVehicle(vehicleData).subscribe(() => {
+      // Pass selectedFile if user selected a new image, otherwise undefined to keep existing image
+      this.vehicleService.updateVehicle(vehicleData, this.selectedFile || undefined).subscribe(() => {
         alert(this.translate.instant('VEHICLE_FORM.PUBLISH_SUCCESS'));
         this.router.navigate(['/my-vehicles']);
       });

@@ -103,16 +103,38 @@ export class VehicleService {
     }
   }
 
-  /** @summary Update a vehicle */
-  updateVehicle(vehicle: Vehicle): Observable<Vehicle> {
+  /**
+   * @summary Update a vehicle with optional image file upload
+   * @param vehicle - The vehicle domain model
+   * @param imageFile - Optional image file to upload (if not provided, keeps existing image)
+   * @returns Observable of the updated vehicle
+   */
+  updateVehicle(vehicle: Vehicle, imageFile?: File): Observable<Vehicle> {
     const dto = VehicleAssembler.toDto(vehicle);
-    return this.http.put<VehicleDto>(`${this.apiUrl}/${vehicle.id}`, dto).pipe(
-      map(updatedDto => VehicleAssembler.toModel(updatedDto)),
-      catchError(err => {
-        this.notifier.showError('ERRORS.VEHICLE.UPDATE_FAILED');
-        return throwError(() => err);
-      })
-    );
+
+    if (imageFile) {
+      // If image is provided, use FormData (multipart/form-data)
+      const formData = new FormData();
+      formData.append('resource', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+      formData.append('image', imageFile);
+
+      return this.http.put<VehicleDto>(`${this.apiUrl}/${vehicle.id}`, formData).pipe(
+        map(updatedDto => VehicleAssembler.toModel(updatedDto)),
+        catchError(err => {
+          this.notifier.showError('ERRORS.VEHICLE.UPDATE_FAILED');
+          return throwError(() => err);
+        })
+      );
+    } else {
+      // If no image provided, use JSON format (keeps existing image in backend)
+      return this.http.put<VehicleDto>(`${this.apiUrl}/${vehicle.id}`, dto).pipe(
+        map(updatedDto => VehicleAssembler.toModel(updatedDto)),
+        catchError(err => {
+          this.notifier.showError('ERRORS.VEHICLE.UPDATE_FAILED');
+          return throwError(() => err);
+        })
+      );
+    }
   }
 
   /** @summary Delete a vehicle by id */
